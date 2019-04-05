@@ -124,6 +124,8 @@ public class AdminController {
 					dolazak.set(Calendar.MINUTE, dolazakMInt);
 					s.setDolazak(dolazak.getTime());
 				}
+				stanice.add(s);
+				destinacije.add(d);
 			}
 			rutaJPARepo.saveAndFlush(r);
 			prevoznikJPARepo.saveAndFlush(p);
