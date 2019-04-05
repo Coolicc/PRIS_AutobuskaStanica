@@ -55,15 +55,18 @@ CREATE TABLE `karta` (
   `datumProdaje` date DEFAULT NULL,
   `rezervisao` int(11) DEFAULT NULL,
   `prodao` int(11) DEFAULT NULL,
-  `ruta` int(11) NOT NULL,
+  `mestoPolaska` int(11) NOT NULL,
+  `mestoDolaska` int(11) NOT NULL,
   PRIMARY KEY (`kartaID`),
   KEY `vrstaKarte_idx` (`vrstaKarte`),
   KEY `rezervisao_idx` (`rezervisao`),
   KEY `prodao_idx` (`prodao`),
-  KEY `ruta_idx` (`ruta`),
+  KEY `mestoPolaska_idx` (`mestoPolaska`),
+  KEY `mestoDolaska_idx` (`mestoDolaska`),
+  CONSTRAINT `mestoDolaska` FOREIGN KEY (`mestoDolaska`) REFERENCES `stanica` (`stanicaID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `mestoPolaska` FOREIGN KEY (`mestoPolaska`) REFERENCES `stanica` (`stanicaID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodao` FOREIGN KEY (`prodao`) REFERENCES `korisnik` (`korisnikID`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `rezervisao` FOREIGN KEY (`rezervisao`) REFERENCES `korisnik` (`korisnikID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `ruta` FOREIGN KEY (`ruta`) REFERENCES `ruta` (`rutaID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `vrstaKarte` FOREIGN KEY (`vrstaKarte`) REFERENCES `vrstakarte` (`vrstaKarteID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -74,7 +77,6 @@ CREATE TABLE `karta` (
 
 LOCK TABLES `karta` WRITE;
 /*!40000 ALTER TABLE `karta` DISABLE KEYS */;
-INSERT INTO `karta` VALUES (1,1184,1,'2019-04-04',NULL,4,NULL,1),(2,368,1,'2019-04-04','2019-04-04',3,2,3);
 /*!40000 ALTER TABLE `karta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,19 +178,12 @@ DROP TABLE IF EXISTS `ruta`;
 CREATE TABLE `ruta` (
   `rutaID` int(11) NOT NULL AUTO_INCREMENT,
   `brMesta` int(11) NOT NULL,
-  `cena` int(11) NOT NULL,
   `datum` date NOT NULL,
   `prevoznik` int(11) NOT NULL,
   `tipPolaska` int(11) NOT NULL,
-  `polazak` int(11) NOT NULL,
-  `dolazak` int(11) NOT NULL,
   PRIMARY KEY (`rutaID`),
   KEY `prevoznikID_idx` (`prevoznik`),
   KEY `tipPolaska_idx` (`tipPolaska`),
-  KEY `polazak_idx` (`polazak`),
-  KEY `dolazak_idx` (`dolazak`),
-  CONSTRAINT `dolazak` FOREIGN KEY (`dolazak`) REFERENCES `destinacija` (`destinacijaID`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `polazak` FOREIGN KEY (`polazak`) REFERENCES `destinacija` (`destinacijaID`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `prevoznik` FOREIGN KEY (`prevoznik`) REFERENCES `prevoznik` (`prevoznikID`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `tipPolaska` FOREIGN KEY (`tipPolaska`) REFERENCES `tippolaska` (`tipPolaskaID`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -200,8 +195,41 @@ CREATE TABLE `ruta` (
 
 LOCK TABLES `ruta` WRITE;
 /*!40000 ALTER TABLE `ruta` DISABLE KEYS */;
-INSERT INTO `ruta` VALUES (1,85,1480,'2019-04-04',5,1,5,3),(2,85,1480,'2019-04-04',5,1,5,2),(3,65,460,'2019-04-04',4,1,5,1);
+INSERT INTO `ruta` VALUES (1,85,'2019-04-04',5,1),(2,85,'2019-04-04',5,1),(3,65,'2019-04-04',4,1);
 /*!40000 ALTER TABLE `ruta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stanica`
+--
+
+DROP TABLE IF EXISTS `stanica`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stanica` (
+  `stanicaID` int(11) NOT NULL AUTO_INCREMENT,
+  `cena` int(11) NOT NULL,
+  `polazak` date DEFAULT NULL,
+  `dolazak` date DEFAULT NULL,
+  `brStanice` int(11) NOT NULL,
+  `destinacijaID` int(11) NOT NULL,
+  `rutaID` int(11) NOT NULL,
+  `brSlobodnihMesta` int(11) NOT NULL,
+  PRIMARY KEY (`stanicaID`),
+  KEY `destinacijaID_idx` (`destinacijaID`),
+  KEY `rutaID_idx` (`rutaID`),
+  CONSTRAINT `destinacijaID` FOREIGN KEY (`destinacijaID`) REFERENCES `destinacija` (`destinacijaID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `rutaID` FOREIGN KEY (`rutaID`) REFERENCES `ruta` (`rutaID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stanica`
+--
+
+LOCK TABLES `stanica` WRITE;
+/*!40000 ALTER TABLE `stanica` DISABLE KEYS */;
+/*!40000 ALTER TABLE `stanica` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -286,4 +314,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-04 20:24:48
+-- Dump completed on 2019-04-05 16:44:00
