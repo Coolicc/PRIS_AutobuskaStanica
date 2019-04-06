@@ -8,7 +8,7 @@
 <title>Unos nove rute</title>
 </head>
 <body>
-	<c:if test="${not empty message} ">
+	<c:if test="${not empty message }">
 	${message }<br>
 	</c:if>
 	<form action="/admin/unosRute" method="post">

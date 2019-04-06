@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import autobuskaStanica.repository.DestinacijaJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
@@ -49,22 +51,21 @@ public class AdminController {
 		List<Prevoznik> prevoznici = prevoznikJPARepo.findAll();
 		m.addAttribute("tipoviRute", tipoviRute);
 		m.addAttribute("prevoznici", prevoznici);
-		m.addAttribute("message", request.getAttribute("message"));
+		request.setAttribute("message", m.asMap().get("message"));
 		return "unosRute";
 	}
 	
 	@RequestMapping(value="unosRute", method=RequestMethod.POST)
-	public String unosRute(Model m, HttpServletRequest request) {
+	public String unosRute(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		List<Destinacija> destinacije = destinacijaJPARepo.findAll();
-		System.out.println(destinacije.size());
 		Integer brojMesta = 0;
 		Integer brojStanica = 0;
 		try {
 			brojMesta = Integer.parseInt(request.getParameter("brojMesta"));
 			brojStanica = Integer.parseInt(request.getParameter("brojStanica"));
 		} catch (NumberFormatException e) {
-			request.setAttribute("message", "Broj mesta i broj stanica moraju da budu broj.");
-			return "forward:/admin/initUnosRute";
+			redirectAttributes.addFlashAttribute("message", "Broj mesta i broj stanica moraju da budu broj.");
+			return "redirect:/admin/initUnosRute";
 		}
 		m.addAttribute("tipRute", request.getParameter("tipRute"));
 		m.addAttribute("prevoznik", request.getParameter("prevoznik"));
@@ -75,7 +76,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="unosStanica", method=RequestMethod.POST)
-	public String unosStanica(Model m, HttpServletRequest request) {
+	public String unosStanica(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
 			Ruta r = new Ruta();
 			r.setBrMesta(Integer.parseInt(request.getParameter("brojMesta")));
@@ -131,15 +132,12 @@ public class AdminController {
 			prevoznikJPARepo.saveAndFlush(p);
 			tipRuteJPARepo.saveAndFlush(tp);
 			stanice.stream().forEach(x -> stanicaJPARepo.saveAndFlush(x));
-//			stanicaJPARepo.saveAll(stanice);
 			destinacije.stream().forEach(x -> destinacijaJPARepo.saveAndFlush(x));
-//			destinacijaJPARepo.saveAll(destinacije);
-			request.setAttribute("message", "Ruta je uspesno dodata.");
-			System.out.println("asdsadasdasdsadsad");
+			redirectAttributes.addFlashAttribute("message", "Ruta je uspesno dodata.");
 		} catch (Exception e) {
 			e.printStackTrace();
-			request.setAttribute("message", "Nisu dobro uneti podaci, probajte ponovo.");
+			redirectAttributes.addFlashAttribute("message", "Nisu dobro uneti podaci, probajte ponovo.");
 		}
-		return "forward:/admin/initUnosRute";
+		return "redirect:/admin/initUnosRute";
 	}
 }
