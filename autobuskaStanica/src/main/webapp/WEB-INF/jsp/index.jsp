@@ -5,6 +5,7 @@
 <title>Index</title>
 </head>
 <body>
-	<a href="/autobuskaStanica/admin/initUnosRute">Unos Rute</a>
+	<a href="/admin/initUnosRute">Unos Rute</a>
+	<a href="/korisnik/loginPage">Uloguj se</a>
 </body>
 </html>
