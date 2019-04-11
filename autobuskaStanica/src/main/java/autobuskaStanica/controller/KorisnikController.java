@@ -3,12 +3,13 @@ package autobuskaStanica.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,7 +31,6 @@ public class KorisnikController {
 	@RequestMapping(value="login", method=RequestMethod.GET)
 	public String login(HttpServletRequest request, Model m) {
 		Korisnik user = (Korisnik) kjr.findByUsernameAndPassword(request.getParameter("username"), request.getParameter("password"));
-			//validateUser(login);
 		if (user !=null) {
 	    	request.getSession().setAttribute("user", user);
 	    } else {
@@ -42,33 +42,42 @@ public class KorisnikController {
 	
 	@RequestMapping(value="loginPage")
     public String index(Model model) {
-
         return "login";
     }
 	
-	@RequestMapping(value="sveUloge", method=RequestMethod.GET)
-	public String vratiSveUloge(Model m) {
+	@RequestMapping(value="registracija", method=RequestMethod.GET)
+	public String vratiSveUloge(Model m, HttpServletRequest request) {
 		List<Ulogakorisnka> uloge = ujr.findAll();
-		m.addAttribute("uloge",uloge);
+		request.getSession().setAttribute("uloge",uloge);
 		return "registracija";
 	}
 	
 	@RequestMapping(value="registracija" , method=RequestMethod.POST)
-	public String registrujKorisnika(String ime, String prezime, String username, String password,String ulogakorisnika, Model m)  {//promeni
-		System.out.println("ime"+ ime);
-		Ulogakorisnka uloga = ujr.findById(Integer.parseInt(ulogakorisnika)).get();
-		Korisnik k = new Korisnik();
-		k.setIme(ime);
-		k.setPrezime(prezime);
-		k.setUsername(username);
-		k.setPassword(password);
-		k.setUlogakorisnka(uloga);
+	public String registrujKorisnika(Model m, @Valid Korisnik korisnik, BindingResult bindingResult)  {
 		
-		Korisnik  sacuvan =  kjr.save(k);
-		if(sacuvan != null)
-			m.addAttribute("message", "Uspesna registracija! Mozete se ulogovati!");
-		else
-			m.addAttribute("message", "Registracija nije uspela!Pokusajte ponovo");
+		if (bindingResult.hasErrors()) {
+			for(FieldError f : bindingResult.getFieldErrors()) {
+					m.addAttribute(f.getField()+"err", f.getDefaultMessage() );	
+			}
+			
+			m.addAttribute("ime", korisnik.getIme());
+			m.addAttribute("prezime", korisnik.getPrezime());
+			m.addAttribute("username", korisnik.getUsername());
+		
+			return "registracija";
+		} else {
+			Korisnik  sacuvan =  kjr.save(korisnik);
+			if(sacuvan != null)
+				m.addAttribute("message", "Uspesna registracija! Mozete se ulogovati!");
+			else
+				m.addAttribute("message", "Registracija nije uspela!Pokusajte ponovo");
+			return "index";
+		}
+	}
+	
+	@RequestMapping("odjava")
+	public String odjavljivanje(HttpServletRequest request) {
+		request.getSession().removeAttribute("user");
 		return "index";
 	}
 	

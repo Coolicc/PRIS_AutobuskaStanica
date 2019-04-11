@@ -23,7 +23,7 @@
 			<br>
             <input type="submit" value="Uloguj se"/>
             <br>
-            <a href="/korisnik/sveUloge">Nemate registrovan nalog? Registruj nalog</a>
+            <a href="/korisnik/registracija">Nemate registrovan nalog? Registruj nalog</a>
       </form>
     </div>
 

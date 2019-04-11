@@ -2,6 +2,12 @@ package autobuskaStanica.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.UniqueElements;
+
 import java.util.List;
 
 
@@ -17,13 +23,19 @@ public class Korisnik implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int korisnikID;
-
+	
+	@NotBlank(message="Morate uneti ime.")
 	private String ime;
-
+	
+	@NotBlank(message="Morate uneti sifru.")
+	@Size(min=8, max=32)
 	private String password;
-
+	
+	@NotBlank(message="Morate uneti prezime.")
 	private String prezime;
-
+	
+	@NotBlank(message="Morate uneti username.")
+	//@UniqueElements(message="Vec postoji username")
 	private String username;
 
 	//bi-directional many-to-one association to Karta

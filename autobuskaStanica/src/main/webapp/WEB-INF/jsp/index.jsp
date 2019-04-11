@@ -17,13 +17,20 @@
 		<c:if test="${user.ulogakorisnka.nazivUloge == 'ADMIN'}">
 			<a href="/admin/initUnosRute">Unos Rute</a><br>
 		</c:if>
-			<a>ostale operacije za ulogovane</a><br>
-			<a >Odjavi se(TO DO)</a><br>
+		<c:if test="${user.ulogakorisnka.nazivUloge == 'RADNIK'}">
+			<a>Prodaja karte</a><br>
+			<a>Pregled dana</a><br>
+		</c:if>
+			<a>Rezeravcije- za putnike</a><br>
+			<a>Prevoznici-ostavljanje komentara</a><br>
+			<a href="/korisnik/odjava">Odjavi se</a><br>
 	</c:if>
+	
 	
 	<c:if test="${empty user}">
 		<a href="/korisnik/loginPage">Uloguj se</a><br>
-		<a>ostale operacije za neulogovane</a><br>
+		<a>Pretraga</a><br>
+		<a>Prevoznici</a><br>
 	</c:if>
 </body>
 </html>
