@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import autobuskaStanica.model.Korisnik;
+import autobuskaStanica.model.Prevoznik;
 import autobuskaStanica.model.Ulogakorisnka;
 import autobuskaStanica.repository.KorisnikJPARepo;
+import autobuskaStanica.repository.PrevoznikJPARepo;
 import autobuskaStanica.repository.UlogaKorisnikaJPARepo;
 
 @Controller
@@ -27,6 +29,9 @@ public class KorisnikController {
 	
 	@Autowired
 	UlogaKorisnikaJPARepo ujr;
+	
+	@Autowired
+	PrevoznikJPARepo pjr;
 	
 	@RequestMapping(value="login", method=RequestMethod.GET)
 	public String login(HttpServletRequest request, Model m) {
@@ -73,6 +78,13 @@ public class KorisnikController {
 				m.addAttribute("message", "Registracija nije uspela!Pokusajte ponovo");
 			return "index";
 		}
+	}
+	
+	@RequestMapping(value="prevoznici", method=RequestMethod.GET)
+	public String prevoznici(Model m) {
+		List<Prevoznik> prevoznici = pjr.findAll();
+		m.addAttribute("prevoznici", prevoznici);
+		return "prevoznici";
 	}
 	
 	@RequestMapping("odjava")
