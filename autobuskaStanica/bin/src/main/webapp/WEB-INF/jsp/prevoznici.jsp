@@ -1,5 +1,7 @@
-<!DOCTYPE html>
-<html class="no-js" lang="zxx">
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -8,26 +10,26 @@
     <!--=== Favicon ===-->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-    <title>Bus Station - Login</title>
+    <title>Cardoor - Car Rental HTML Template</title>
 
     <!--=== Bootstrap CSS ===-->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <!--=== Slicknav CSS ===-->
-    <link href="assets/css/plugins/slicknav.min.css" rel="stylesheet">
+    <link href="/assets/css/plugins/slicknav.min.css" rel="stylesheet">
     <!--=== Magnific Popup CSS ===-->
-    <link href="assets/css/plugins/magnific-popup.css" rel="stylesheet">
+    <link href="/assets/css/plugins/magnific-popup.css" rel="stylesheet">
     <!--=== Owl Carousel CSS ===-->
-    <link href="assets/css/plugins/owl.carousel.min.css" rel="stylesheet">
+    <link href="/assets/css/plugins/owl.carousel.min.css" rel="stylesheet">
     <!--=== Gijgo CSS ===-->
-    <link href="assets/css/plugins/gijgo.css" rel="stylesheet">
+    <link href="/assets/css/plugins/gijgo.css" rel="stylesheet">
     <!--=== FontAwesome CSS ===-->
-    <link href="assets/css/font-awesome.css" rel="stylesheet">
+    <link href="/assets/css/font-awesome.css" rel="stylesheet">
     <!--=== Theme Reset CSS ===-->
-    <link href="assets/css/reset.css" rel="stylesheet">
+    <link href="/assets/css/reset.css" rel="stylesheet">
     <!--=== Main Style CSS ===-->
-    <link href="style.css" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet">
     <!--=== Responsive CSS ===-->
-    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="/assets/css/responsive.css" rel="stylesheet">
 
 
     <!--[if lt IE 9]>
@@ -39,7 +41,7 @@
 <body class="loader-active">
 
     <!--== Preloader Area Start ==-->
-    
+   
     <!--== Preloader Area End ==-->
 
     <!--== Header Area Start ==-->
@@ -88,7 +90,7 @@
                     <!--== Logo Start ==-->
                     <div class="col-lg-4">
                         <a href="index.html" class="logo" style="width:30%">
-                            <img src="assets/img/busLogo.jpg" alt="JSOFT"><span>BUS STATION</span>
+                            <img src="/assets/img/busLogo.jpg" alt="JSOFT"><span>BUS STATION </span>
                         </a>
                     </div>
                     <!--== Logo End ==-->
@@ -98,13 +100,11 @@
                         <nav class="mainmenu alignright">
                             <ul>
                                 <li><a href="rezervacija.html">Rezervacija</a>
+                                </li>								
+								<li class="active"><a href="prevoznici.html">Prevoznici</a>
                                 </li>
-								<li><a href="prevoznici.html">Prevoznici</a>
-                                </li>
-                                <li><a href="administracija.html">Administracija</a></li>
-                                
-                               
-                                <li class="active"><a href="login.html">Log In</a>
+                                <li><a href="administracija.html">Administracija</a></li>                                
+                                <li><a href="login.html">Log In</a>
                                 </li>
                                 <li><a href="register.html">Registracija</a>                                  
                                 </li>
@@ -127,9 +127,9 @@
                 <!-- Page Title Start -->
                 <div class="col-lg-12">
                     <div class="section-title  text-center">
-                        <h2>Login</h2>
-                        <span class="title-line"></span>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                        <h2>PREVOZNICI</h2>
+                        <span class="title-line" style="top: -15px;"></span>
+                        <p>Raspola&#382;emo vozilima od 19 do 89 komercijalnih sedi&#353;ta. Idealna ponuda za razne vrste putovanja.</p>
                     </div>
                 </div>
                 <!-- Page Title End -->
@@ -138,35 +138,36 @@
     </section>
     <!--== Page Title Area End ==-->
 
-    <!--== Login Page Content Start ==-->
-    <section id="lgoin-page-wrap" class="section-padding">
+    <!--== Car List Area Start ==-->
+    <section id="car-list-area" class="section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-8 m-auto">
-                	<div class="login-page-content">
-                		<div class="login-form">
-                			<h3>Log In</h3>
-							<form action="index.html">
-								<div class="username">
-									<input type="text" placeholder="Email or Username">
-								</div>
-								<div class="password">
-									<input type="password" placeholder="Password">
-								</div>
-								<div class="log-btn">
-									<button type="submit"><i class="fa fa-sign-in"></i> Log In</button>
-								</div>
-							</form>
-                		</div>            
-                		<div class="create-ac">
-                			<p>Nemate nalog? <a href="register.html">Registrujte se</a></p>
-                		</div>
-                	</div>
+                <!-- Car List Content Start -->
+                <div class="col-lg-12">
+                    <div class="car-list-content">
+                        <div class="row">
+                            <!-- Single Car Start -->
+                            <c:forEach items="${prevoznici }" var="p">
+                           		<div class="col-lg-6 col-md-6">
+                               		<div class="single-car-wrap">
+                                    	<div class="car-list-info without-bar">
+                                        	<h2><a href="#">${p.naziv }</a></h2>
+                                        	<h5>${p.adresa }, ${p.grad }</h5>
+                                        	<p>E-mail: ${p.email }</p>
+                                            <p>Telefon: ${p.telefon }</p>                             
+                                        	<a href="komentar.html" class="rent-btn">Dodaj komentar</a>
+                                    	</div>
+                                	</div>
+                            	</div>
+							</c:forEach>
+                        </div>
+                    </div>                   
                 </div>
-        	</div>
+                <!-- Car List Content End -->
+            </div>
         </div>
     </section>
-    <!--== Login Page Content End ==-->
+    <!--== Car List Area End ==-->
 
     <!--== Footer Area Start ==-->
     <section id="footer-area">
@@ -179,7 +180,7 @@
                         <div class="single-footer-widget">
                             <h2>O nama</h2>
                             <div class="widget-body">
-                                <img src="assets/img/busLogo.jpg" alt="JSOFT" style="width:50%">
+                                <img src="/assets/img/busLogo.jpg" alt="JSOFT" style="width:50%">
                                 <p>Lorem ipsum dolored is a sit ameted consectetur adipisicing elit. Nobis magni assumenda distinctio debitis, eum fuga fugiat error reiciendis.</p>
                             </div>
                         </div>
@@ -229,37 +230,36 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </section>
     <!--== Footer Area End ==-->
 
- 
     <!--=======================Javascript============================-->
     <!--=== Jquery Min Js ===-->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
     <!--=== Jquery Migrate Min Js ===-->
-    <script src="assets/js/jquery-migrate.min.js"></script>
+    <script src="/assets/js/jquery-migrate.min.js"></script>
     <!--=== Popper Min Js ===-->
-    <script src="assets/js/popper.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
     <!--=== Bootstrap Min Js ===-->
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
     <!--=== Gijgo Min Js ===-->
-    <script src="assets/js/plugins/gijgo.js"></script>
+    <script src="/assets/js/plugins/gijgo.js"></script>
     <!--=== Vegas Min Js ===-->
-    <script src="assets/js/plugins/vegas.min.js"></script>
+    <script src="/assets/js/plugins/vegas.min.js"></script>
     <!--=== Isotope Min Js ===-->
-    <script src="assets/js/plugins/isotope.min.js"></script>
+    <script src="/assets/js/plugins/isotope.min.js"></script>
     <!--=== Owl Caousel Min Js ===-->
-    <script src="assets/js/plugins/owl.carousel.min.js"></script>
+    <script src="/assets/js/plugins/owl.carousel.min.js"></script>
     <!--=== Waypoint Min Js ===-->
-    <script src="assets/js/plugins/waypoints.min.js"></script>
+    <script src="/assets/js/plugins/waypoints.min.js"></script>
     <!--=== CounTotop Min Js ===-->
-    <script src="assets/js/plugins/counterup.min.js"></script>
+    <script src="/assets/js/plugins/counterup.min.js"></script>
     <!--=== YtPlayer Min Js ===-->
-    <script src="assets/js/plugins/mb.YTPlayer.js"></script>
+    <script src="/assets/js/plugins/mb.YTPlayer.js"></script>
     <!--=== Magnific Popup Min Js ===-->
-    <script src="assets/js/plugins/magnific-popup.min.js"></script>
+    <script src="/assets/js/plugins/magnific-popup.min.js"></script>
     <!--=== Slicknav Min Js ===-->
-    <script src="assets/js/plugins/slicknav.min.js"></script>
+    <script src="/assets/js/plugins/slicknav.min.js"></script>
 
     <!--=== Mian Js ===-->
-    <script src="assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
 
 </body>
 
