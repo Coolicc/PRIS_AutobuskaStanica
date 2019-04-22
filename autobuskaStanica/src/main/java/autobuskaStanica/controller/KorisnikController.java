@@ -54,7 +54,7 @@ public class KorisnikController {
 	public String vratiSveUloge(Model m, HttpServletRequest request) {
 		List<Ulogakorisnka> uloge = ujr.findAll();
 		request.getSession().setAttribute("uloge",uloge);
-		return "registracija";
+		return "register";
 	}
 	
 	@RequestMapping(value="registracija" , method=RequestMethod.POST)
@@ -69,14 +69,14 @@ public class KorisnikController {
 			m.addAttribute("prezime", korisnik.getPrezime());
 			m.addAttribute("username", korisnik.getUsername());
 		
-			return "registracija";
+			return "register";
 		} else {
 			Korisnik  sacuvan =  kjr.save(korisnik);
 			if(sacuvan != null)
 				m.addAttribute("message", "Uspesna registracija! Mozete se ulogovati!");
 			else
 				m.addAttribute("message", "Registracija nije uspela!Pokusajte ponovo");
-			return "index";
+			return "login";
 		}
 	}
 	
