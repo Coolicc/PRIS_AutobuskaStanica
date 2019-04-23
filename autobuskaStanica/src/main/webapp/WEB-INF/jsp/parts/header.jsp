@@ -73,7 +73,7 @@
                                 </li>
                                 <li><a href="register.html">Registracija</a>                                  
                                 </li>
-                                <li class="active"><a href="contact.html">Komentari</a></li>
+                                <li class="active"><a href="komentari">Komentari</a></li>
                             </ul>
                         </nav>
                     </div>
