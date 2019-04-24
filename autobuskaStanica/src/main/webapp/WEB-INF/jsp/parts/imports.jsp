@@ -3,12 +3,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
+	<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
 	
-    <!--=== Bootstrap CSS ===-->
+	    <!--=== Bootstrap CSS ===-->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <!--=== Slicknav CSS ===-->
     <link href="/assets/css/plugins/slicknav.min.css" rel="stylesheet">
@@ -26,7 +24,9 @@
     <link href="/assets/css/style.css" rel="stylesheet">
     <!--=== Responsive CSS ===-->
     <link href="/assets/css/responsive.css" rel="stylesheet">
-
+	
+</head>
+<body>
 
     <!--[if lt IE 9]>
         <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>

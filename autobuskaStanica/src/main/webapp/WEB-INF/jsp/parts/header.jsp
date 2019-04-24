@@ -52,7 +52,7 @@
                 <div class="row">
                     <!--== Logo Start ==-->
                     <div class="col-lg-4">
-                        <a href="index.html" class="logo" style="width:30%">
+                        <a href="/korisnik/index" class="logo" style="width:30%">
                             <img src="/assets/img/busLogo.jpg" alt="JSOFT"><span>BUS STATION </span>
                         </a>
                     </div>
@@ -62,18 +62,18 @@
                     <div class="col-lg-8 d-none d-xl-block">
                         <nav class="mainmenu alignright">
                             <ul>
-                                <li><a href="rezervacija.html">Rezervacija</a>
-                                </li>								
-								<li><a href="prevoznici">Prevoznici</a>
+                               	<li><a href="/korisnik/rezervacija">Rezervacija</a>
+                                </li>							
+								<li><a href="/korisnik/prevoznici">Prevoznici</a>
                                 </li>
-                                <li><a href="administracija.html">Administracija</a></li>
+                                <li><a href="/admin/initUnosRute">Administracija</a></li>
                                 
                                
-                                <li><a href="login.html">Log In</a>
+                                <li><a href="/korisnik/loginPage">Log In</a>
                                 </li>
-                                <li><a href="register.html">Registracija</a>                                  
+                                <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
                                 </li>
-                                <li class="active"><a href="contact.html">Komentari</a></li>
+                                <li class="active"><a href="contact.html">Kontakt</a></li>
                             </ul>
                         </nav>
                     </div>

@@ -56,7 +56,7 @@
                                         	<h5>${p.adresa }, ${p.grad }</h5>
                                         	<p>E-mail: ${p.email }</p>
                                             <p>Telefon: ${p.telefon }</p>                             
-                                        	<a href="komentari" class="rent-btn">Dodaj komentar</a>
+                                        	<a href="/korisnik/komentari" class="rent-btn">Dodaj komentar</a>
                                     	</div>
                                 	</div>
                             	</div>

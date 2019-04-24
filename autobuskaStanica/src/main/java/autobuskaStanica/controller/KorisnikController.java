@@ -33,6 +33,12 @@ public class KorisnikController {
 	@Autowired
 	PrevoznikJPARepo pjr;
 	
+	@RequestMapping(value="index", method=RequestMethod.GET)
+	public String indexPage() {
+		return "index";
+	}
+	
+	
 	@RequestMapping(value="login", method=RequestMethod.GET)
 	public String login(HttpServletRequest request, Model m) {
 		Korisnik user = (Korisnik) kjr.findByUsernameAndPassword(request.getParameter("username"), request.getParameter("password"));
@@ -49,6 +55,12 @@ public class KorisnikController {
     public String index(Model model) {
         return "login";
     }
+	
+	
+	@RequestMapping(value="registracijaPage", method=RequestMethod.GET)
+	public String registracija() {
+		return "register";
+	}
 	
 	@RequestMapping(value="registracija", method=RequestMethod.GET)
 	public String vratiSveUloge(Model m, HttpServletRequest request) {
@@ -93,4 +105,13 @@ public class KorisnikController {
 		return "index";
 	}
 	
+	@RequestMapping(value="komentari")
+    public String komentari() {
+        return "komentari";
+    }
+	
+	@RequestMapping(value="rezervacija")
+    public String rezervacija() {
+        return "rezervacija";
+    }
 }
