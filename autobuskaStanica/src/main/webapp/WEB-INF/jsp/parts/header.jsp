@@ -62,7 +62,7 @@
                     <div class="col-lg-8 d-none d-xl-block">
                         <nav class="mainmenu alignright">
                             <ul>
-                               	<li><a href="/korisnik/rezervacija">Rezervacija</a>
+                               	<li><a href="/korisnik/initRezervacija">Rezervacija</a>
                                 </li>							
 								<li><a href="/korisnik/prevoznici">Prevoznici</a>
                                 </li>
