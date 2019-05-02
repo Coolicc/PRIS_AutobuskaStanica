@@ -15,11 +15,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
 
 import autobuskaStanica.model.Destinacija;
+import autobuskaStanica.model.Karta;
 import autobuskaStanica.model.Korisnik;
 import autobuskaStanica.model.Prevoznik;
 import autobuskaStanica.model.Ruta;
@@ -27,6 +29,7 @@ import autobuskaStanica.model.Stanica;
 import autobuskaStanica.model.Ulogakorisnka;
 import autobuskaStanica.model.Vrstakarte;
 import autobuskaStanica.repository.DestinacijaJPARepo;
+import autobuskaStanica.repository.KartaJPARepo;
 import autobuskaStanica.repository.KorisnikJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
@@ -54,6 +57,9 @@ public class KorisnikController {
 	
 	@Autowired
 	StanicaJPARepo stanicaJpaRepo;
+	
+	@Autowired
+	KartaJPARepo kartaJpaRepo;
 	
 	@RequestMapping(value="index", method=RequestMethod.GET)
 	public String indexPage() {
@@ -147,6 +153,8 @@ public class KorisnikController {
 		int destPolazak = Integer.parseInt(request.getParameter("polazak"));
 		int destDolazak = Integer.parseInt(request.getParameter("dolazak"));
 		int vrstaKarte = Integer.parseInt(request.getParameter("vrstaKarte"));
+		//treba da se proverava da li postoji polazak odredjenog datuma
+		//za sad ne radi nista sa datumom
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 		Date datumPolaska;
 		try {
@@ -202,5 +210,46 @@ public class KorisnikController {
 		m.addAttribute("cene", cene);
 		m.addAttribute("vrstaKarte", vrstaKarte);
 		return "prikazPolazakaZaRezervaciju";
+	}
+	
+	@RequestMapping(value="rezervisi", method=RequestMethod.GET)
+	public String potvrdaRezervacije(@RequestParam("polazakDest") int polazakDest, @RequestParam("dolazakDest") int dolazakDest, @RequestParam("vrstaKarte") int vrstaKarte, @RequestParam("ruta") int rutaID,@RequestParam("cena") double cena,  Model m, HttpServletRequest request) {
+		Karta k= new Karta();
+		
+		Stanica sPolazna = stanicaJpaRepo.findByDestinacijaIDAndRutaID(rutaID, polazakDest);
+		Stanica sDolazna = stanicaJpaRepo.findByDestinacijaIDAndRutaID(rutaID, dolazakDest);
+		List<Stanica> medjuStanice = stanicaJpaRepo.getMedjustaniceNaRuti(sPolazna.getBrStanice(), sDolazna.getBrStanice(), rutaID);
+		boolean ok = true;
+		for(Stanica s: medjuStanice) {
+			if(s.getBrSlobodnihMesta()-1<=0) {
+				m.addAttribute("err","Nazalost nema mesta");
+				ok=false;
+				return "potvrdaRezervacije";
+			}
+		}
+		if(ok) {
+			for(Stanica s: medjuStanice) {
+				s.setBrSlobodnihMesta(s.getBrSlobodnihMesta()-1);
+				stanicaJpaRepo.save(s);
+			}
+		}
+		
+		Korisnik korisnik = (Korisnik) request.getSession().getAttribute("user");
+		k.setDatumRezervacije(new Date());
+		k.setVrstakarte(vrstaKarteJpaRepo.findByVrstaKarteID(vrstaKarte));
+		k.setKorisnik2(korisnik);
+		List<Karta> karteKorisnika = kartaJpaRepo.rezervacijeKorisnika(korisnik.getKorisnikID());
+		if((karteKorisnika.size()+1)%3==0 ) {
+			String msg = "Dobijate popust 10% za ovu rezervaciju!";
+			k.setKonacnaCena(cena*0.9);
+			m.addAttribute("msgPopust", msg);
+		}else {
+			k.setKonacnaCena(cena);
+		}
+		k.setStanica2(sPolazna);
+		k.setStanica1(sDolazna);
+		kartaJpaRepo.save(k);
+		m.addAttribute("msgRez","Uspesno ste rezervisali");
+		return "potvrdaRezervacije";
 	}
 }

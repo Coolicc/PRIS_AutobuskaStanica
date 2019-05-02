@@ -73,7 +73,7 @@
                                 </li>
                                 <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
                                 </li>
-                                <li class="active"><a href="contact.html">Kontakt</a></li>
+                                <li><a href="contact.html">Kontakt</a></li>
                             </ul>
                         </nav>
                     </div>
