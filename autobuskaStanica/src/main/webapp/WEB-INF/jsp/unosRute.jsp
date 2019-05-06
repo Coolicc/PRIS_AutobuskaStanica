@@ -48,6 +48,7 @@
                 	<div class="login-page-content">
                 		<div class="login-form">
                 			<h3>Unesite rutu</h3><br>
+                			<c:if test="${not empty message }"><h5>${message }</h5></c:if>
 							<form action="/admin/unosRute" method="post">
 								<div class="prevoznik">
 									Prevoznik:

@@ -25,3 +25,5 @@ hs_err_pid*
 .metadata/
 .recommenders/
 application.properties
+autobuskaStanica/pom.xml
+autobuskaStanica/src/main/resources/application.properties

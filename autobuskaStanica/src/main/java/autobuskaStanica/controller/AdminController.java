@@ -1,5 +1,7 @@
 package autobuskaStanica.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +31,8 @@ import autobuskaStanica.model.Tippolaska;
 @Controller
 @RequestMapping(value="/admin")
 public class AdminController {
+	
+	private static final String SEZONSKA_ID = "3";
 
 	@Autowired
 	RutaJPARepo rutaJPARepo;
@@ -72,6 +76,8 @@ public class AdminController {
 		m.addAttribute("brojMesta", brojMesta);
 		m.addAttribute("brojStanica", brojStanica);
 		m.addAttribute("destinacije", destinacije);
+		if (request.getParameter("tipRute").equals(SEZONSKA_ID))
+			m.addAttribute("sezonska", "sezonska");
 		return "unosStanica";
 	}
 	
@@ -84,7 +90,18 @@ public class AdminController {
 			Tippolaska tp = tipRuteJPARepo.findById(Integer.parseInt(request.getParameter("tipRute"))).get();
 			r.setPrevoznikBean(p);
 			r.setTippolaska(tp);
-			r.setDatum(new Date());
+			if (request.getParameter("datumVazenja") != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date datumVazenja;
+				try {
+					datumVazenja = sdf.parse(request.getParameter("datumVazenja"));
+					r.setDatum(datumVazenja);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			} else {
+				r.setDatum(new Date());
+			}
 			p.addRuta(r);
 			tp.addRuta(r);
 			int brojStanica = Integer.parseInt(request.getParameter("brojStanica"));
