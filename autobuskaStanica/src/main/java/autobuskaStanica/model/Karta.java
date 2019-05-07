@@ -24,7 +24,7 @@ public class Karta implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date datumRezervacije;
 
-	private int konacnaCena;
+	private double konacnaCena;
 
 	//bi-directional many-to-one association to Stanica
 	@ManyToOne
@@ -78,11 +78,11 @@ public class Karta implements Serializable {
 		this.datumRezervacije = datumRezervacije;
 	}
 
-	public int getKonacnaCena() {
+	public double getKonacnaCena() {
 		return this.konacnaCena;
 	}
 
-	public void setKonacnaCena(int konacnaCena) {
+	public void setKonacnaCena(double konacnaCena) {
 		this.konacnaCena = konacnaCena;
 	}
 

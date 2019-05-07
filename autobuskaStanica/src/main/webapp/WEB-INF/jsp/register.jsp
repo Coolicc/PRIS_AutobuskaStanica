@@ -10,7 +10,7 @@
     <!--=== Favicon ===-->
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-    <title>Bus Station - Unos nove rute</title>
+    <title>Bus Station - Registracija</title>
     
 	 <!-- import css/js -->
     <%@ include file="parts/imports.jsp" %>
@@ -29,9 +29,9 @@
                 <!-- Page Title Start -->
                 <div class="col-lg-12">
                     <div class="section-title  text-center">
-                        <h2>Unos nove rute</h2>
+                        <h2>Registracija</h2>
                         <span class="title-line"></span>
-                        <p>Unesite podatke za novu rutu </p>
+                        <p>Unesite Vase podatke kako biste izvrsili registraciju </p>
                     </div>
                 </div>
                 <!-- Page Title End -->
@@ -47,35 +47,37 @@
                 <div class="col-lg-5 col-md-8 m-auto">
                 	<div class="login-page-content">
                 		<div class="login-form">
-                			<h3>Unesite rutu</h3><br>
-                			<c:if test="${not empty message }"><h5>${message }</h5></c:if>
-							<form action="/admin/unosRute" method="post">
-								<div class="prevoznik">
-									Prevoznik:
-									<select name="prevoznik">
-										<c:forEach var="p" items="${prevoznici }">
-											<option value="${p.prevoznikID }">${p.naziv }</option>
-										</c:forEach>
-									</select>
-								</div><br>
-								<div class="brojmesta">
-									Broj mesta u autobusu:<input type="text" placeholder="Broj mesta" name="brojMesta" /> 
-								</div><br>
-								<div class="tipRute">
-									Tip rute: 	
-									<select name="tipRute">
-										<c:forEach var="t" items="${tipoviRute }">
-											<option value="${t.tipPolaskaID }">${t.nazivTipa }</option>
-										</c:forEach>
-									</select>
-								</div><br>
-								<div class="brojStanica">
-									Broj stanica <input type="text" placeholder="Broj stanica" name="brojStanica"/>
-								</div><br>
+                			<h3>Registruj se</h3>
+							<form action="/korisnik/registracija" method="post">
+								<div class="name">
+									<div class="row">
+										<div class="col-md-6">
+											<input type="text" placeholder="Ime"name="ime" value="${ime }" /> ${imeerr}
+										</div>
+										<div class="col-md-6">
+											<input type="text" placeholder="Prezime" name="prezime" value="${prezime }"/>  ${prezimeerr}
+										</div>
+									</div>
+								</div>
+								<div class="username">
+									<input type="text" placeholder="Username" name="username" value="${username }"/>  ${usernameerr}
+								</div>
+								<div class="password">
+									<input type="password" placeholder="Password" name="password"/> ${passworderr}<br>
+								</div>
+							
+								<!--Registruje se sam putnik? - za ostale posebno -->
+								<input type="hidden" name="ulogakorisnka" value="3"/>
+								
 								<div class="log-btn">
-									<button type="submit"><i class="fa fa-check-square"></i> Dalje</button>
+									<button type="submit"><i class="fa fa-check-square"></i> Registruj se</button>
 								</div>
 							</form>
+                		</div>
+                		
+                		
+                		<div class="create-ac">
+                			<p>Imate nalog? <a href="/korisnik/login"> Prijavite se</a></p>
                 		</div>
                 	</div>
                 </div>
