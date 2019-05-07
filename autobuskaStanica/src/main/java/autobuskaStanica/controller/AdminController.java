@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import autobuskaStanica.repository.DestinacijaJPARepo;
+import autobuskaStanica.repository.KartaJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
 import autobuskaStanica.repository.RutaJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
 import autobuskaStanica.repository.TipRuteJPARepo;
 import autobuskaStanica.model.Destinacija;
+import autobuskaStanica.model.Karta;
+import autobuskaStanica.model.Korisnik;
 import autobuskaStanica.model.Prevoznik;
 import autobuskaStanica.model.Ruta;
 import autobuskaStanica.model.Stanica;
@@ -48,6 +51,9 @@ public class AdminController {
 	
 	@Autowired
 	StanicaJPARepo stanicaJPARepo;
+	
+	@Autowired
+	KartaJPARepo kartaJPARepo;
 	
 	@RequestMapping(value="initUnosRute", method=RequestMethod.GET)
 	public String initUnosRute(Model m, HttpServletRequest request) {
@@ -157,4 +163,17 @@ public class AdminController {
 		}
 		return "redirect:/admin/initUnosRute";
 	}
+	
+	@RequestMapping(value="danasnjaZarada", method=RequestMethod.GET)
+	public String danasnjaZarada(Model m, HttpServletRequest request) {
+		Korisnik user = (Korisnik) request.getSession().getAttribute("user");
+		if (user == null) 
+			return "login";
+		List<Karta> prodateKarte = kartaJPARepo.prodajeRadnikaZaDanas(user.getKorisnikID());
+		m.addAttribute("brojKarata", prodateKarte.size());
+		double ukupnaZarada = prodateKarte.stream().mapToDouble(x -> x.getKonacnaCena()).sum();
+		m.addAttribute("ukupnaZarada", ukupnaZarada);
+		return "danasnjaZarada";
+	}
+	
 }
