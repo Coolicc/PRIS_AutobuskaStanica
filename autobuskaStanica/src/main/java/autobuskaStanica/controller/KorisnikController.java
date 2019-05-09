@@ -22,6 +22,7 @@ import java.text.ParseException;
 
 import autobuskaStanica.model.Destinacija;
 import autobuskaStanica.model.Karta;
+import autobuskaStanica.model.Komentar;
 import autobuskaStanica.model.Korisnik;
 import autobuskaStanica.model.Prevoznik;
 import autobuskaStanica.model.Ruta;
@@ -30,6 +31,7 @@ import autobuskaStanica.model.Ulogakorisnka;
 import autobuskaStanica.model.Vrstakarte;
 import autobuskaStanica.repository.DestinacijaJPARepo;
 import autobuskaStanica.repository.KartaJPARepo;
+import autobuskaStanica.repository.KomentarJPARepo;
 import autobuskaStanica.repository.KorisnikJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
@@ -42,6 +44,9 @@ public class KorisnikController {
 	
 	@Autowired
 	KorisnikJPARepo kjr;
+	
+	@Autowired
+	KomentarJPARepo komentarJPARepo;
 	
 	@Autowired
 	UlogaKorisnikaJPARepo ujr;
@@ -251,5 +256,39 @@ public class KorisnikController {
 		kartaJpaRepo.save(k);
 		m.addAttribute("msgRez","Uspesno ste rezervisali");
 		return "potvrdaRezervacije";
+	}
+	
+	@RequestMapping(value="prevozniciZaKomentar", method=RequestMethod.GET)
+	public String getPrevoznici(Model m, HttpServletRequest request) {
+		List<Prevoznik> prevozniciZaKomentar = pjr.findAll();
+		m.addAttribute("prevozniciZaKomentar", prevozniciZaKomentar);
+		return "komentari";
+	}
+	
+	@RequestMapping(value="getKomentari", method=RequestMethod.GET)
+	public String getKomentari(HttpServletRequest request, Model m) {
+		List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
+		m.addAttribute("komentari", komentari);
+		return "komentari";
+	}
+	
+	@RequestMapping(value="saveKomentar", method=RequestMethod.POST)
+	public String saveKomentar(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		try {
+			Komentar k = new Komentar();
+			k.setKomentar(request.getParameter("komentar"));
+			Prevoznik p = pjr.findById(Integer.parseInt(request.getParameter("prevoznik"))).get();
+			p.addKomentar(k);
+			k.setKorisnik((Korisnik) request.getSession().getAttribute("user"));
+			pjr.saveAndFlush(p);
+			komentarJPARepo.save(k);
+			List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
+			//m.addAttribute("komentari", komentari);
+			redirectAttributes.addFlashAttribute("komentari", komentari);
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return "redirect:/korisnik/prevozniciZaKomentar";
 	}
 }

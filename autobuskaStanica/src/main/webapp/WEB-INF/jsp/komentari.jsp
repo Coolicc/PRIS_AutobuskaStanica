@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+  
 <html class="no-js" lang="zxx">
 
 <head>
@@ -44,30 +47,35 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 m-auto">
-                    <div class="contact-form">
-                        <form action="komentar.html">                            
+                    <div class="contact-form">  
+                    <form action="/korisnik/saveKomentar" method="post">                                                                                                                                                                                                                	              
                             <div class="car-choose bookinput-item">
-                                <select class="custom-select">
-                                    <option selected>Prevoznik</option>
-                                    <option value="1">To be binded</option>
-                                    <option value="2">To be binded</option>
-                                    <option value="3">To be binded</option>
-                                </select>
-                            </div>
+                                <select name="prevoznik">
+									<c:forEach var="p" items="${prevozniciZaKomentar}">
+										<option value="${p.prevoznikID }">${p.naziv }</option>
+									</c:forEach>
+								</select>
+								 <br> <c:forEach items="${komentari }" var="k">                           		                                       	
+                                 <h5>${k.komentar }</h5>  <br>                                     	                                                                                                                     	
+							</c:forEach>
+                            </div>                           
+                          
 
                             <div class="message-input">
-                                <textarea name="review" cols="30" rows="10" placeholder="Komentar"></textarea>
+                                <textarea name="komentar" cols="30" rows="10" placeholder="Komentar"></textarea>
                             </div>
-
+								
                             <div class="input-submit">
                                 <button type="submit">Dodaj komentar</button>
-                            </div>
-                        </form>
+                            </div> 
+                         </form>  
+                          <!--<c:if test="${not empty message }"><h5>${message }</h5></c:if>    -->              
+                          </div>                                    
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    
     <!--== Contact Page Area End ==-->
 
 	<!-- footer import -->
