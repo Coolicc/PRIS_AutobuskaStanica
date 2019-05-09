@@ -377,7 +377,7 @@ a.slicknav_btn {
 }
 
 .book-a-car select.custom-select {
-	background-image: url("assets/img/caret-cion.png");
+	background-image: url("/assets/img/caret-cion.png");
 	background-position: right 13px center;
 	background-size: 12px auto;
 }
@@ -1663,7 +1663,7 @@ body,
 }
 
 .book-ur-car select.custom-select {
-	background-image: url("assets/img/caret-cion.png");
+	background-image: url("/assets/img/caret-cion.png");
 	background-position: right 12px center;
 	background-size: 12px auto;
 }
@@ -2218,7 +2218,7 @@ body,
 /*== Page Title CSS ==*/
 
 #page-title-area {
-	background-image: url("assets/img/page-title.jpg");
+	background-image: url("/assets/img/page-title.jpg");
 	background-position: center center;
 	background-size: cover;
 	padding-top: 220px;

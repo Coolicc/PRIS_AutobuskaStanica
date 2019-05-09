@@ -35,6 +35,7 @@ import autobuskaStanica.repository.PrevoznikJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
 import autobuskaStanica.repository.UlogaKorisnikaJPARepo;
 import autobuskaStanica.repository.VrstaKarteJPARepo;
+import autobuskaStanica.service.PolasciService;
 
 @Controller
 @RequestMapping(value="/korisnik")
@@ -61,6 +62,9 @@ public class KorisnikController {
 	@Autowired
 	KartaJPARepo kartaJpaRepo;
 	
+	@Autowired
+	PolasciService polasciService;
+	
 	@RequestMapping(value="index", method=RequestMethod.GET)
 	public String indexPage() {
 		return "index";
@@ -76,7 +80,7 @@ public class KorisnikController {
 	    	m.addAttribute("message", "Username ili password nisu korektni!");
 	    	return "login";
 	  	}
-		return "index";
+		return "redirect:/korisnik/initPocetna";
 	}
 	
 	@RequestMapping(value="loginPage")
@@ -139,7 +143,7 @@ public class KorisnikController {
     }
 	
 	@RequestMapping(value = "initRezervacija", method = RequestMethod.GET)
-	public String initRezervacija(Model m, HttpServletRequest request) {
+	public String initRezervacija(Model m) {
 		List<Destinacija> destinacije = destinacijaJpaRepo.findAll();
 		List<Vrstakarte> vrsteKarata = vrstaKarteJpaRepo.findAll();
 		
@@ -169,41 +173,11 @@ public class KorisnikController {
 			redirectAttributes.addFlashAttribute("msg", "Morate izabrati destinaciju za polazak i dolazak");
 			return "redirect:/korisnik/initRezervacija";
 		}
-		List<Stanica> polazakStanice = stanicaJpaRepo.findByDestinacijaID(destPolazak);
-		List<Ruta> rezRuta = new ArrayList<>();
-		for(Stanica p: polazakStanice) {
-			Ruta ruta = p.getRuta();
-			List<Stanica> staniceRute = ruta.getStanicas();
-			for(Stanica s:staniceRute) {
-				if(s.getDestinacija().getDestinacijaID() == destDolazak && s.getBrStanice()>p.getBrStanice()) {
-					rezRuta.add(ruta);
-					break;
-				}
-			}
-		}
 		
-		List<Double> cene = new ArrayList<>();
-		for(Ruta r: rezRuta) {
-			List<Stanica> stanice = r.getStanicas();
-			int polazna = 0; 
-			int dolazna = 0;
-			double cena = 0;
-			for(Stanica s:stanice) {
-				if(s.getDestinacija().getDestinacijaID()==destPolazak) {
-					polazna = s.getBrStanice();
-				}
-				if(s.getDestinacija().getDestinacijaID() == destDolazak) {
-					dolazna = s.getBrStanice();
-				}
-			}
-			List<Stanica> medjuStanice= stanicaJpaRepo.getMedjustaniceNaRuti(polazna, dolazna, r.getRutaID());
-			for(Stanica s:medjuStanice) {
-				cena+=s.getCena();
-			}
-			Vrstakarte vrstaK = vrstaKarteJpaRepo.findByVrstaKarteID(vrstaKarte);
-			cena= cena * vrstaK.getPopust();
-			cene.add(cena);
-		}
+		List<Ruta> rezRuta = polasciService.ruteSaDestinacijama(destPolazak, destDolazak);
+		
+		List<Double> cene = polasciService.ceneZaPolaske(rezRuta, destPolazak, destDolazak, vrstaKarte);
+		
 		m.addAttribute("rezRuta", rezRuta);
 		m.addAttribute("destPolazak", destPolazak);
 		m.addAttribute("destDolazak",destDolazak);
@@ -251,5 +225,44 @@ public class KorisnikController {
 		kartaJpaRepo.save(k);
 		m.addAttribute("msgRez","Uspesno ste rezervisali");
 		return "potvrdaRezervacije";
+	}
+	
+	@RequestMapping(value="initPocetna", method=RequestMethod.GET)
+	public String initPocetna(Model m) {
+		List<Destinacija> destinacije = destinacijaJpaRepo.findAll();
+		List<Vrstakarte> vrsteKarata = vrstaKarteJpaRepo.findAll();
+		
+		m.addAttribute("destinacije", destinacije);
+		m.addAttribute("vrsteKarata", vrsteKarata);
+		return "pocetna";
+		
+	}
+	
+	@RequestMapping(value="pocetna", method=RequestMethod.GET)
+	public String prikazPolazaka(Model m,HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		initPocetna(m);
+		int destPolazak = Integer.parseInt(request.getParameter("polazak"));
+		int destDolazak = Integer.parseInt(request.getParameter("dolazak"));
+		int vrstaKarte = Integer.parseInt(request.getParameter("vrstaKarte"));
+		//provera za datum
+		
+		if(vrstaKarte == 0) {
+			vrstaKarte = 4;
+		}
+		if(destPolazak==0 || destDolazak==0) {
+			redirectAttributes.addFlashAttribute("msg", "Morate izabrati destinaciju za polazak i dolazak");
+			return "redirect:/korisnik/initPocetna";
+		}
+		
+		List<Ruta> rute= polasciService.ruteSaDestinacijama(destPolazak, destDolazak);
+		
+		List<Double> cene = polasciService.ceneZaPolaske(rute, destPolazak, destDolazak, vrstaKarte);
+		
+		m.addAttribute("rute", rute);
+		m.addAttribute("destPolazak", destPolazak);
+		m.addAttribute("destDolazak",destDolazak);
+		m.addAttribute("cene", cene);
+		m.addAttribute("vrstaKarte", vrstaKarte);
+		return "pocetna";
 	}
 }
