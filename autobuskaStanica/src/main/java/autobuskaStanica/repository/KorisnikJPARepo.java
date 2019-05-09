@@ -11,4 +11,6 @@ public interface KorisnikJPARepo extends JpaRepository<Korisnik, Integer> {
 	Korisnik findByUsernameAndPassword(String username, String password);
 
 	Korisnik findByUsername(String username);
+	
+	Korisnik findByImeAndPrezime(String ime, String prezime);
 }
