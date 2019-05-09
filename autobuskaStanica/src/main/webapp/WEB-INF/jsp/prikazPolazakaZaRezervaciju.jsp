@@ -64,8 +64,12 @@
                                     </c:forEach>
                                     <td>${r.prevoznikBean.naziv }</td>
                                     <td> ${cene[status.index] }</td>
-                                    <td><a href="/korisnik/rezervisi?polazakDest=${destPolazak }&dolazakDest=${destDolazak }&vrstaKarte=${vrstaKarte}&ruta=${r.rutaID }&cena=${cene[status.index] }">REZERVISI</a></td>
-                                    </tr>
+									<c:if test="${user.ulogakorisnka.nazivUloge == 'PUTNIK' }">
+                                   		<td><a href="/korisnik/rezervisi?polazakDest=${destPolazak }&dolazakDest=${destDolazak }&vrstaKarte=${vrstaKarte}&ruta=${r.rutaID }&cena=${cene[status.index] }">REZERVISI</a></td>
+                                   	</c:if>
+                                   	<c:if test="${user.ulogakorisnka.nazivUloge == 'RADNIK' }">
+                                   		<td><a href="/korisnik/kupiBezRezervacije?polazakDest=${destPolazak }&dolazakDest=${destDolazak }&vrstaKarte=${vrstaKarte}&ruta=${r.rutaID }&cena=${cene[status.index] }">Prodaj kartu</a></td>
+                                   	</c:if>                                      </tr>
                                     </c:forEach>
                                     </table>
                                     
