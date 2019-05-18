@@ -25,10 +25,10 @@ public class Stanica implements Serializable {
 
 	private int cena;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dolazak;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date polazak;
 
 	//bi-directional many-to-one association to Karta
@@ -40,7 +40,7 @@ public class Stanica implements Serializable {
 	private List<Karta> kartas2;
 
 	//bi-directional many-to-one association to Destinacija
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="destinacijaID")
 	private Destinacija destinacija;
 

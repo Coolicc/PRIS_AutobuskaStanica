@@ -25,7 +25,7 @@ public class Ruta implements Serializable {
 	private Date datum;
 
 	//bi-directional many-to-one association to Prevoznik
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="prevoznik")
 	private Prevoznik prevoznikBean;
 
@@ -35,7 +35,7 @@ public class Ruta implements Serializable {
 	private Tippolaska tippolaska;
 
 	//bi-directional many-to-one association to Stanica
-	@OneToMany(mappedBy="ruta")
+	@OneToMany(mappedBy="ruta", fetch=FetchType.EAGER)
 	private List<Stanica> stanicas;
 
 	public Ruta() {

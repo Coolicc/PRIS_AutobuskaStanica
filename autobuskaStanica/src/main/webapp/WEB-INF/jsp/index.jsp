@@ -17,39 +17,63 @@
     
     <!-- header import -->
     <%@ include file="parts/header.jsp" %>
+    <style>
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	  color: white;
+	}
+	td {
+	  padding: 15px;
+	}
+	</style>
 </head>
 
 <body class="loader-active">
 
-    <!--== Page Title Area Start ==-->
+    <!--== Login Page Content Start ==-->
     <section id="page-title-area" class="section-padding overlay">
-        <div class="container">
+    <div class="container">
             <div class="row">
-                <!-- Page Title Start -->
-                <div class="col-lg-12">
-                    <div class="section-title  text-center">
-                        <h2>INDEX</h2>
-                        <span class="title-line"></span>
+                <div class="col-lg-12 text-center">
+                    <div class="slideshowcontent">
+                        <div class="display-table">
+                            <div class="display-table-cell">
+                            	<h1>NAJPOVOLJNIJE PONUDE</h1>
+                                <div class="book-ur-car">
+                                    <table>
+                                    <tr>
+                                    <th>Od</th>
+                                    <th>Polazak</th>
+                                    <th>Do</th>
+                                    <th>Dolazak</th>
+                                    <th>Prevoznik</th>
+                                    <th>Cena</th>
+                                    <th></th>
+                                    </tr>
+                         
+                                    <c:forEach var="s" items="${stanice }">
+                                    <tr>
+                                    <td>  ${s.odDestinacija }  </td><td>  ${ s.polazak.hours}:${ s.polazak.minutes}  </td>
+                                    <td>  ${s.doDestinacija }  </td><td>  ${ s.dolazak.hours}:${ s.dolazak.minutes}  </td>
+                                    <td>${s.prevoznik }</td>
+                                    <td> ${s.cena } RSD</td>
+                                    <c:if test="${user.ulogakorisnka.nazivUloge == 'PUTNIK' }">
+                                   		<td><a href="/korisnik/rezervisi?polazakDest=${s.polazakDest }&dolazakDest=${s.dolazakDest }&vrstaKarte=${s.vrstaKarte}&ruta=${s.rutaID }&cena=${s.cena }">REZERVISI</a></td>
+                                   	</c:if>
+                                   	<c:if test="${user.ulogakorisnka.nazivUloge == 'RADNIK' }">
+                                   		<td><a href="/korisnik/kupiBezRezervacije?polazakDest=${s.polazakDest }&dolazakDest=${s.dolazakDest }&vrstaKarte=${s.vrstaKarte}&ruta=${s.rutaID }&cena=${s.cena }">Prodaj kartu</a></td>
+                                   	</c:if> 
+                                  </tr>
+                                    </c:forEach>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Page Title End -->
             </div>
-        </div>
-    </section>
-    <!--== Page Title Area End ==-->
-
-    <!--== Login Page Content Start ==-->
-    <section id="lgoin-page-wrap" class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-8 m-auto">
-                	<div class="login-page-content">
-                		<div class="index">
-                			<h3>PONUDE</h3>
-                		</div>
-                	</div>
-                </div>
-        	</div>
         </div>
     </section>
     <!--== Login Page Content End ==-->
