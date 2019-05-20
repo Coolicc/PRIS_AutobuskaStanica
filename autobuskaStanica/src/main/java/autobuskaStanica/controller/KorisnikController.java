@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
 
+import autobuskaStanica.beans.StanicaBean;
 import autobuskaStanica.model.Destinacija;
 import autobuskaStanica.model.Karta;
 import autobuskaStanica.model.Komentar;
@@ -35,6 +37,7 @@ import autobuskaStanica.repository.KartaJPARepo;
 import autobuskaStanica.repository.KomentarJPARepo;
 import autobuskaStanica.repository.KorisnikJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
+import autobuskaStanica.repository.RutaJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
 import autobuskaStanica.repository.UlogaKorisnikaJPARepo;
 import autobuskaStanica.repository.VrstaKarteJPARepo;
@@ -72,7 +75,26 @@ public class KorisnikController {
 	PolasciService polasciService;
 	
 	@RequestMapping(value="index", method=RequestMethod.GET)
-	public String indexPage() {
+	public String indexPage(HttpServletRequest request, Model m) {
+		List<StanicaBean> sbeans = new ArrayList<>();
+		List<Stanica> stanice = stanicaJpaRepo.getNajpovoljnijePrevoze(new PageRequest(0, 10));
+		for (Stanica s: stanice) {
+			StanicaBean sb = new StanicaBean();
+			Ruta r = s.getRuta();
+			sb.setRutaID(r.getRutaID());
+			sb.setVrstaKarte(4);
+			sb.setPrevoznik(r.getPrevoznikBean().getNaziv());
+			sb.setCena(s.getCena());
+			sb.setPolazak(s.getPolazak());
+			sb.setOdDestinacija(s.getDestinacija().getGrad() + ", " + s.getDestinacija().getDrzava());
+			sb.setPolazakDest(s.getDestinacija().getDestinacijaID());
+			Stanica next = s.getRuta().getStanicas().get(s.getBrStanice() + 1);
+			sb.setDoDestinacija(next.getDestinacija().getGrad() + ", " + next.getDestinacija().getDrzava());
+			sb.setDolazak(next.getDolazak());
+			sb.setDolazakDest(next.getDestinacija().getDestinacijaID());
+			sbeans.add(sb);
+		}
+		m.addAttribute("stanice", sbeans);
 		return "index";
 	}
 	

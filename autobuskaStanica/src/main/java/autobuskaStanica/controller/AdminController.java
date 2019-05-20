@@ -135,6 +135,7 @@ public class AdminController {
 					Calendar polazak = Calendar.getInstance();
 					polazak.set(Calendar.HOUR_OF_DAY, polazakHInt);
 					polazak.set(Calendar.MINUTE, polazakMInt);
+					polazak.set(Calendar.SECOND, 0);
 					s.setPolazak(polazak.getTime());
 				}
 				if (!dolazakH.equals("") && !dolazakM.equals("")) {
@@ -146,6 +147,7 @@ public class AdminController {
 					Calendar dolazak = Calendar.getInstance();
 					dolazak.set(Calendar.HOUR_OF_DAY, dolazakHInt);
 					dolazak.set(Calendar.MINUTE, dolazakMInt);
+					dolazak.set(Calendar.SECOND, 0);
 					s.setDolazak(dolazak.getTime());
 				}
 				stanice.add(s);

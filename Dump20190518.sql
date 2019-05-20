@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: autobuska_stanica
+-- Host: 127.0.0.1    Database: autobuskastanica
 -- ------------------------------------------------------
--- Server version	5.7.22-log
+-- Server version	8.0.15
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `destinacija`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `destinacija` (
   `destinacijaID` int(11) NOT NULL AUTO_INCREMENT,
   `drzava` varchar(45) NOT NULL,
@@ -46,7 +46,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `karta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `karta` (
   `kartaID` int(11) NOT NULL AUTO_INCREMENT,
   `konacnaCena` int(11) NOT NULL,
@@ -65,10 +65,10 @@ CREATE TABLE `karta` (
   KEY `mestoDolaska_idx` (`mestoDolaska`),
   CONSTRAINT `mestoDolaska` FOREIGN KEY (`mestoDolaska`) REFERENCES `stanica` (`stanicaID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mestoPolaska` FOREIGN KEY (`mestoPolaska`) REFERENCES `stanica` (`stanicaID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `prodao` FOREIGN KEY (`prodao`) REFERENCES `korisnik` (`korisnikID`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `prodao` FOREIGN KEY (`prodao`) REFERENCES `korisnik` (`korisnikID`) ON UPDATE CASCADE,
   CONSTRAINT `rezervisao` FOREIGN KEY (`rezervisao`) REFERENCES `korisnik` (`korisnikID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `vrstaKarte` FOREIGN KEY (`vrstaKarte`) REFERENCES `vrstakarte` (`vrstaKarteID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  CONSTRAINT `vrstaKarte` FOREIGN KEY (`vrstaKarte`) REFERENCES `vrstakarte` (`vrstaKarteID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,6 +77,7 @@ CREATE TABLE `karta` (
 
 LOCK TABLES `karta` WRITE;
 /*!40000 ALTER TABLE `karta` DISABLE KEYS */;
+INSERT INTO `karta` VALUES (1,100,1,'2019-05-07','2019-05-09',1,2,1,2),(2,200,2,'2019-05-07','2019-05-09',3,2,1,2),(3,100,4,NULL,'2019-05-18',NULL,2,11,12),(4,100,4,'2019-05-18',NULL,3,NULL,1,2),(5,100,4,NULL,'2019-05-18',NULL,2,1,2);
 /*!40000 ALTER TABLE `karta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +87,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `komentar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `komentar` (
   `komentarID` int(11) NOT NULL AUTO_INCREMENT,
   `korisnikID` int(11) NOT NULL,
@@ -97,7 +98,7 @@ CREATE TABLE `komentar` (
   KEY `prevoznikID_idx` (`prevoznikID`),
   CONSTRAINT `korisnikID` FOREIGN KEY (`korisnikID`) REFERENCES `korisnik` (`korisnikID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prevoznikID` FOREIGN KEY (`prevoznikID`) REFERENCES `prevoznik` (`prevoznikID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +107,7 @@ CREATE TABLE `komentar` (
 
 LOCK TABLES `komentar` WRITE;
 /*!40000 ALTER TABLE `komentar` DISABLE KEYS */;
-INSERT INTO `komentar` VALUES (1,3,7,'Dobar prevoznik, preporucujem'),(2,4,5,'Autobusi su grozni'),(3,4,4,'Odlican prevoznik');
+INSERT INTO `komentar` VALUES (1,3,7,'Dobar prevoznik, preporucujem'),(2,4,5,'Autobusi su grozni'),(3,4,4,'Odlican prevoznik'),(4,2,3,'ahdjksahdjkashkdj'),(5,2,3,'hjhjhj');
 /*!40000 ALTER TABLE `komentar` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +117,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `korisnik`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `korisnik` (
   `korisnikID` int(11) NOT NULL AUTO_INCREMENT,
   `ime` varchar(45) NOT NULL,
@@ -126,7 +127,7 @@ CREATE TABLE `korisnik` (
   `ulogaID` int(11) NOT NULL,
   PRIMARY KEY (`korisnikID`),
   KEY `ulogaID_idx` (`ulogaID`),
-  CONSTRAINT `ulogaID` FOREIGN KEY (`ulogaID`) REFERENCES `ulogakorisnka` (`ulogaID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `ulogaID` FOREIGN KEY (`ulogaID`) REFERENCES `ulogakorisnka` (`ulogaID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -146,7 +147,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `prevoznik`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `prevoznik` (
   `prevoznikID` int(11) NOT NULL AUTO_INCREMENT,
   `naziv` varchar(45) NOT NULL,
@@ -174,19 +175,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ruta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `ruta` (
   `rutaID` int(11) NOT NULL AUTO_INCREMENT,
   `brMesta` int(11) NOT NULL,
-  `datum` date NOT NULL,
+  `datum` date DEFAULT NULL,
   `prevoznik` int(11) NOT NULL,
   `tipPolaska` int(11) NOT NULL,
   PRIMARY KEY (`rutaID`),
   KEY `prevoznikID_idx` (`prevoznik`),
   KEY `tipPolaska_idx` (`tipPolaska`),
-  CONSTRAINT `prevoznik` FOREIGN KEY (`prevoznik`) REFERENCES `prevoznik` (`prevoznikID`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `tipPolaska` FOREIGN KEY (`tipPolaska`) REFERENCES `tippolaska` (`tipPolaskaID`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  CONSTRAINT `prevoznik` FOREIGN KEY (`prevoznik`) REFERENCES `prevoznik` (`prevoznikID`) ON UPDATE CASCADE,
+  CONSTRAINT `tipPolaska` FOREIGN KEY (`tipPolaska`) REFERENCES `tippolaska` (`tipPolaskaID`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -195,7 +196,7 @@ CREATE TABLE `ruta` (
 
 LOCK TABLES `ruta` WRITE;
 /*!40000 ALTER TABLE `ruta` DISABLE KEYS */;
-INSERT INTO `ruta` VALUES (1,85,'2019-04-04',5,1),(2,85,'2019-04-04',5,1),(3,65,'2019-04-04',4,1);
+INSERT INTO `ruta` VALUES (1,85,'2019-04-04',5,1),(2,85,'2019-04-04',5,1),(3,65,'2019-04-04',4,1),(4,30,'2019-04-10',6,1),(5,2,NULL,2,3),(6,3,'2019-05-29',3,3),(7,2,'2019-05-15',2,3),(8,5,'2019-05-18',6,1);
 /*!40000 ALTER TABLE `ruta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,12 +206,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `stanica`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `stanica` (
   `stanicaID` int(11) NOT NULL AUTO_INCREMENT,
   `cena` int(11) NOT NULL,
-  `polazak` date DEFAULT NULL,
-  `dolazak` date DEFAULT NULL,
+  `polazak` datetime DEFAULT NULL,
+  `dolazak` datetime DEFAULT NULL,
   `brStanice` int(11) NOT NULL,
   `destinacijaID` int(11) NOT NULL,
   `rutaID` int(11) NOT NULL,
@@ -220,7 +221,7 @@ CREATE TABLE `stanica` (
   KEY `rutaID_idx` (`rutaID`),
   CONSTRAINT `destinacijaID` FOREIGN KEY (`destinacijaID`) REFERENCES `destinacija` (`destinacijaID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `rutaID` FOREIGN KEY (`rutaID`) REFERENCES `ruta` (`rutaID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,6 +230,7 @@ CREATE TABLE `stanica` (
 
 LOCK TABLES `stanica` WRITE;
 /*!40000 ALTER TABLE `stanica` DISABLE KEYS */;
+INSERT INTO `stanica` VALUES (1,100,'2019-04-10 00:00:00',NULL,0,1,4,28),(2,200,'2019-04-10 00:00:00','2019-04-10 00:00:00',1,2,4,30),(3,300,NULL,'2019-04-10 00:00:00',2,3,4,30),(4,100,'2019-05-06 00:00:00',NULL,0,1,5,2),(5,200,NULL,'2019-05-06 00:00:00',1,2,5,2),(6,100,'2019-05-06 00:00:00',NULL,0,1,6,3),(7,200,'2019-05-06 00:00:00','2019-05-06 00:00:00',1,2,6,3),(8,300,NULL,'2019-05-06 00:00:00',2,3,6,3),(9,100,'2019-05-06 00:00:00',NULL,0,5,7,2),(10,200,NULL,'2019-05-06 00:00:00',1,4,7,2),(11,100,'2019-05-18 12:00:59',NULL,0,1,8,4),(12,200,'2019-05-18 12:15:59','2019-05-18 12:10:59',1,2,8,5),(13,300,NULL,'2019-05-18 12:30:59',2,3,8,5);
 /*!40000 ALTER TABLE `stanica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -238,7 +240,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tippolaska`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `tippolaska` (
   `tipPolaskaID` int(11) NOT NULL AUTO_INCREMENT,
   `nazivTipa` varchar(45) NOT NULL,
@@ -262,7 +264,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ulogakorisnka`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `ulogakorisnka` (
   `ulogaID` int(11) NOT NULL AUTO_INCREMENT,
   `nazivUloge` varchar(45) NOT NULL,
@@ -286,7 +288,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `vrstakarte`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `vrstakarte` (
   `vrstaKarteID` int(11) NOT NULL AUTO_INCREMENT,
   `nazivVrste` varchar(45) NOT NULL,
@@ -301,7 +303,7 @@ CREATE TABLE `vrstakarte` (
 
 LOCK TABLES `vrstakarte` WRITE;
 /*!40000 ALTER TABLE `vrstakarte` DISABLE KEYS */;
-INSERT INTO `vrstakarte` VALUES (1,'studentska',0.8),(2,'penzionerska',0.8),(3,'povratna',0.8),(4,'regularna',NULL);
+INSERT INTO `vrstakarte` VALUES (1,'studentska',0.8),(2,'penzionerska',0.8),(3,'povratna',0.8),(4,'regularna',1);
 /*!40000 ALTER TABLE `vrstakarte` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -314,4 +316,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-05 16:44:00
+-- Dump completed on 2019-05-18 13:56:00
