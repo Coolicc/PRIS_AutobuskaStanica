@@ -56,7 +56,9 @@
                                         	<h5>${p.adresa }, ${p.grad }</h5>
                                         	<p>E-mail: ${p.email }</p>
                                             <p>Telefon: ${p.telefon }</p>                             
-                                        	<a href="/korisnik/prevozniciZaKomentar" class="rent-btn">Dodaj komentar</a>
+                                        	<!--<a href="/korisnik/komentariZaPrevoznika" class="rent-btn">Dodaj komentar</a>-->
+                                        	<a href="<c:url value="/korisnik/komentariZaPrevoznika/${p.prevoznikID}" />" class="rent-btn">Dodaj komentar</a>
+                                        	
                                     	</div>
                                 	</div>
                             	</div>

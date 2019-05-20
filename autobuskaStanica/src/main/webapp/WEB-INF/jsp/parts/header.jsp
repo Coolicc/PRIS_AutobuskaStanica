@@ -74,7 +74,7 @@
                                 </li>
                                 <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
                                 </li>
-                                <li class="active"><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>
+                               <!-- <li class="active"><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>-->
                             </ul>
                         </nav>
                     </div>
