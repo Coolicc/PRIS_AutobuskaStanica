@@ -77,10 +77,14 @@
                                 </li>
                                 <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
                                 </li>
+
                                 <li><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>
                                 
   								<li><a href="/korisnik/odjava">Logout</a>
 								
+
+                               <!-- <li class="active"><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>-->
+
                             </ul>
                         </nav>
                     </div>

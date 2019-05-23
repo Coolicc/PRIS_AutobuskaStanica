@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -166,10 +167,42 @@ public class KorisnikController {
 		return "index";
 	}
 	
+	//komentari
+	
 	@RequestMapping(value="komentari")
     public String komentari() {
         return "komentari";
     }
+	
+	@RequestMapping(value="komentariZaPrevoznika/{prevoznikID}")
+    public String komentariZaPrevoznika(Model m, @PathVariable("prevoznikID") int prevoznikID) {
+		Prevoznik p = (Prevoznik) pjr.findById(prevoznikID).get();
+		m.addAttribute("p", p);
+		List<Komentar> komentariZaPrevoz = komentarJPARepo.vratiKomentareZaPrevoznika(prevoznikID);
+		m.addAttribute("komentariZaPrevoz", komentariZaPrevoz);
+        return "komentariZaPrevoznika";
+    }
+	
+	@RequestMapping(value="saveKomentarZaPrevoznika/{prevoznikID}", method=RequestMethod.POST)
+	public String saveKomentarZaPrevoznika(Model m, @PathVariable("prevoznikID") int prevoznikID, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		try {
+			Komentar k = new Komentar();
+			k.setKomentar(request.getParameter("komentar"));
+			Prevoznik p = pjr.findById(prevoznikID).get();
+			p.addKomentar(k);
+			k.setKorisnik((Korisnik) request.getSession().getAttribute("user"));
+			pjr.saveAndFlush(p);
+			komentarJPARepo.save(k);
+			List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(prevoznikID);
+			//m.addAttribute("komentari", komentari);
+			redirectAttributes.addFlashAttribute("komentari", komentari);
+			redirectAttributes.addFlashAttribute("message", "Komentar je uspesno dodat.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		return "redirect:/korisnik/komentariZaPrevoznika/{prevoznikID}";
+	}
 	
 	@RequestMapping(value = "initRezervacija", method = RequestMethod.GET)
 	public String initRezervacija(Model m) {
@@ -263,11 +296,12 @@ public class KorisnikController {
 		return "komentari";
 	}
 	
+	//komentari za prevoznika iz dropdown
 	@RequestMapping(value="getKomentari", method=RequestMethod.GET)
 	public String getKomentari(HttpServletRequest request, Model m) {
 		List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
 		m.addAttribute("komentari", komentari);
-		return "komentari";
+		return "saveKomentar";
 	}
 	
 	@RequestMapping(value="saveKomentar", method=RequestMethod.POST)
@@ -283,12 +317,15 @@ public class KorisnikController {
 			List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
 			//m.addAttribute("komentari", komentari);
 			redirectAttributes.addFlashAttribute("komentari", komentari);
+			redirectAttributes.addFlashAttribute("message", "Komentar je uspesno dodat.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 		}
 		return "redirect:/korisnik/prevozniciZaKomentar";
 	}
+	
+	
 	@RequestMapping(value="initPocetna", method=RequestMethod.GET)
 	public String initPocetna(Model m) {
 		List<Destinacija> destinacije = destinacijaJpaRepo.findAll();
