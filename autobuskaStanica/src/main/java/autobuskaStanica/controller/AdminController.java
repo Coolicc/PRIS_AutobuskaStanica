@@ -7,22 +7,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import autobuskaStanica.repository.DestinacijaJPARepo;
-import autobuskaStanica.repository.KartaJPARepo;
-import autobuskaStanica.repository.PrevoznikJPARepo;
-import autobuskaStanica.repository.RutaJPARepo;
-import autobuskaStanica.repository.StanicaJPARepo;
-import autobuskaStanica.repository.TipRuteJPARepo;
 import autobuskaStanica.model.Destinacija;
 import autobuskaStanica.model.Karta;
 import autobuskaStanica.model.Korisnik;
@@ -30,9 +24,16 @@ import autobuskaStanica.model.Prevoznik;
 import autobuskaStanica.model.Ruta;
 import autobuskaStanica.model.Stanica;
 import autobuskaStanica.model.Tippolaska;
+import autobuskaStanica.repository.DestinacijaJPARepo;
+import autobuskaStanica.repository.KartaJPARepo;
+import autobuskaStanica.repository.PrevoznikJPARepo;
+import autobuskaStanica.repository.RutaJPARepo;
+import autobuskaStanica.repository.StanicaJPARepo;
+import autobuskaStanica.repository.TipRuteJPARepo;
 
 @Controller
 @RequestMapping(value="/admin")
+@RolesAllowed("ROLE_ADMIN")
 public class AdminController {
 	
 	private static final String SEZONSKA_ID = "3";
@@ -54,6 +55,7 @@ public class AdminController {
 	
 	@Autowired
 	KartaJPARepo kartaJPARepo;
+	
 	
 	@RequestMapping(value="initUnosRute", method=RequestMethod.GET)
 	public String initUnosRute(Model m, HttpServletRequest request) {

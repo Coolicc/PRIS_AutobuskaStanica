@@ -66,15 +66,21 @@
                                 </li>							
 								<li><a href="/korisnik/prevoznici">Prevoznici</a>
                                 </li>
+                                
                                 <li><a href="/admin/initUnosRute">Administracija</a></li>
-                                <li><a href="/admin/danasnjaZarada">Zarada</a></li>
+                       			
                                 
                                 <li><a href="/korisnik/initProdajaKarata">Prodaja karata</a></li>
+                                <li><a href="/admin/danasnjaZarada">Zarada</a></li>
+                                
                                 <li><a href="/korisnik/loginPage">Log In</a>
                                 </li>
                                 <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
                                 </li>
-                                <li class="active"><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>
+                                <li><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>
+                                
+  								<li><a href="/korisnik/odjava">Logout</a>
+								
                             </ul>
                         </nav>
                     </div>

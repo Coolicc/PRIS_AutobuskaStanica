@@ -77,7 +77,7 @@
                 		
                 		
                 		<div class="create-ac">
-                			<p>Imate nalog? <a href="/korisnik/login"> Prijavite se</a></p>
+                			<p>Imate nalog? <a href="/korisnik/loginPage"> Prijavite se</a></p>
                 		</div>
                 	</div>
                 </div>

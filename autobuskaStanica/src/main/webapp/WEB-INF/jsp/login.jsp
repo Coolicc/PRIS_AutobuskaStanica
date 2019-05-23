@@ -2,6 +2,8 @@
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
 <html class="no-js" lang="zxx">
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 
 <head>
     <meta charset="utf-8">
@@ -46,12 +48,13 @@
                 	<div class="login-page-content">
                 		<div class="login-form">
                 			<h3>Uloguj se</h3>
+                			
 							<form action="/korisnik/login" method="get">
 							
 								<c:if test="${not empty message }">
 									${message }<br>
 								</c:if>
-								
+															
 								<div class="username">
 									<input type="text" name="username" placeholder="Username">
 								</div>
@@ -59,11 +62,12 @@
 									<input type="password" name="password" placeholder="Password">
 								</div>
 								
-								<span>${error}</span>
+								<!-- <span>${error}</span> -->
 								
 								<div class="log-btn">
 									<button type="submit"><i class="fa fa-sign-in"></i> Uoguj se</button>
 								</div>
+								
 							</form>
                 		</div>            
                 		<div class="create-ac">

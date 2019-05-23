@@ -1,5 +1,7 @@
 package autobuskaStanica.controller;
 
+import java.security.Principal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.text.ParseException;
-
 import autobuskaStanica.beans.StanicaBean;
 import autobuskaStanica.model.Destinacija;
 import autobuskaStanica.model.Karta;
@@ -36,11 +36,11 @@ import autobuskaStanica.repository.KartaJPARepo;
 import autobuskaStanica.repository.KomentarJPARepo;
 import autobuskaStanica.repository.KorisnikJPARepo;
 import autobuskaStanica.repository.PrevoznikJPARepo;
-import autobuskaStanica.repository.RutaJPARepo;
 import autobuskaStanica.repository.StanicaJPARepo;
 import autobuskaStanica.repository.UlogaKorisnikaJPARepo;
 import autobuskaStanica.repository.VrstaKarteJPARepo;
 import autobuskaStanica.service.PolasciService;
+
 
 @Controller
 @RequestMapping(value="/korisnik")
@@ -73,6 +73,7 @@ public class KorisnikController {
 	@Autowired
 	PolasciService polasciService;
 	
+	
 	@RequestMapping(value="index", method=RequestMethod.GET)
 	public String indexPage(HttpServletRequest request, Model m) {
 		List<StanicaBean> sbeans = new ArrayList<>();
@@ -103,6 +104,7 @@ public class KorisnikController {
 		Korisnik user = (Korisnik) kjr.findByUsernameAndPassword(request.getParameter("username"), request.getParameter("password"));
 		if (user !=null) {
 	    	request.getSession().setAttribute("user", user);
+	    	request.getSession().setAttribute("uloga", user.getUlogakorisnka());
 	    } else {
 	    	m.addAttribute("message", "Username ili password nisu korektni!");
 	    	return "login";
@@ -114,7 +116,7 @@ public class KorisnikController {
     public String index(Model model) {
         return "login";
     }
-	
+    
 	
 	@RequestMapping(value="registracijaPage", method=RequestMethod.GET)
 	public String registracija() {
