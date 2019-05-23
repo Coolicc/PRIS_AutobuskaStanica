@@ -25,7 +25,7 @@
 	</style>
 </head>
 	<!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+    <%@ include file="parts/headerP.jsp" %>
 <body class="loader-active">
 	
 	 <!--== SlideshowBg Area Start ==-->

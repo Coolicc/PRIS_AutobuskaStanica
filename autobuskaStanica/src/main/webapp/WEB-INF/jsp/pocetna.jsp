@@ -1,3 +1,4 @@
+<%@page import="autobuskaStanica.model.Korisnik"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -36,7 +37,17 @@
 
 </head>
 	<!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+	
+	<% 
+Korisnik k=(Korisnik)request.getSession().getAttribute("user");
+	if(k.getUlogakorisnka().getNazivUloge().equals("ADMIN")){
+%>
+    <%@ include file="parts/headerA.jsp" %>
+    <% }else if(k.getUlogakorisnka().getNazivUloge().equals("RADNIK")){ %>
+    	<%@ include file="parts/headerR.jsp" %>
+    <% }else{%>
+    <%@ include file="parts/headerP.jsp" %>
+    <%} %>
 <body class="loader-active">
 	 <!--== SlideshowBg Area Start ==-->
     <div id="page-title-area" class="section-padding overlay">
@@ -49,6 +60,9 @@
                                 <h1>PUTUJTE SA NAMA</h1>
                                 <p>OCEKUJU VAS RAZNI POPUSTI <br>REZERVISITE VASE MESTO!</p>
                                 <div class="book-ur-car">
+                                <c:if test="${not empty autherr}">
+                        				${autherr }<br>
+                    			</c:if>
                                     <form action="/korisnik/pocetna" method="get">
                                         <div class="pick-location bookinput-item">
                                             <select class="custom-select" name ="polazak">

@@ -62,15 +62,12 @@
                     <div class="col-lg-8 d-none d-xl-block">
                         <nav class="mainmenu alignright">
                             <ul>
-                               								
-								<li><a href="/korisnik/prevoznici">Prevoznici</a>
-                                </li>
-                                
-                                
-                                <li><a href="/korisnik/loginPage">Log In</a>
-                                </li>
-                                <li><a href="/korisnik/registracijaPage">Registracija</a>                                  
-                                </li>
+                 
+                                <li><a href="/admin/initUnosRute">Administracija</a></li>
+                       			
+  								<li><a href="/korisnik/odjava">Logout</a>
+								
+                               <!-- <li class="active"><a href="/korisnik/prevozniciZaKomentar">Komentari</a></li>-->
 
                             </ul>
                         </nav>

@@ -16,7 +16,7 @@
     <%@ include file="parts/imports.jsp" %>
     
     <!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+    <%@ include file="parts/headerA.jsp" %>
 	
 </head>
 

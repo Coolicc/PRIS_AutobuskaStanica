@@ -19,7 +19,7 @@
     <%@ include file="parts/imports.jsp" %>
     
     <!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+    <%@ include file="parts/headerP.jsp" %>
 </head>
 <body class="loader-active">
 
@@ -47,6 +47,7 @@
             <div class="row">
                 <div class="col-lg-10 m-auto">
                     <div class="contact-form">
+  
                     <form action="/korisnik/saveKomentarZaPrevoznika/${p.prevoznikID }" method="post">                                                                                                                                                                                                                            	              
                     	<h5>Prevoznik ${p.naziv}</h5><br>
                         <c:forEach items="${komentariZaPrevoz }" var="k">                           		                                       	
@@ -67,7 +68,7 @@
                         	<button type="submit">Dodaj komentar</button>
                         </div> 
                         </form>
-                                
+                               
                     </div>                                    
                 </div>
             </div>

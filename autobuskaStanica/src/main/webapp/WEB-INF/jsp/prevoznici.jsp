@@ -1,3 +1,4 @@
+<%@page import="autobuskaStanica.model.Korisnik"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
@@ -16,7 +17,19 @@
     <%@ include file="parts/imports.jsp" %>
     
     <!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+<% 
+Korisnik k=(Korisnik)request.getSession().getAttribute("user");
+	if(k==null){
+%>
+	<%@ include file="parts/header.jsp" %>
+	<%}else if(k.getUlogakorisnka().getNazivUloge().equals("ADMIN")){ %>
+    <%@ include file="parts/headerA.jsp" %>
+    <% }else if(k.getUlogakorisnka().getNazivUloge().equals("RADNIK")){ %>
+    	<%@ include file="parts/headerR.jsp" %>
+    <% }else if(k.getUlogakorisnka().getNazivUloge().equals("PUTNIK")){%>
+    <%@ include file="parts/headerP.jsp" %>
+    <%} %>
+     
 </head>
 
 <body class="loader-active">

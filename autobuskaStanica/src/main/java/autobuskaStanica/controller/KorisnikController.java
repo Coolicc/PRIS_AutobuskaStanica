@@ -164,18 +164,33 @@ public class KorisnikController {
 	@RequestMapping("odjava")
 	public String odjavljivanje(HttpServletRequest request) {
 		request.getSession().removeAttribute("user");
-		return "index";
+		request.getSession().removeAttribute("uloga");
+		return "redirect:/korisnik/index";
 	}
 	
 	//komentari
 	
 	@RequestMapping(value="komentari")
-    public String komentari() {
+    public String komentari(HttpServletRequest request, Model m, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+			return "redirect:/korisnik/initPocetna";
+		}
         return "komentari";
     }
 	
 	@RequestMapping(value="komentariZaPrevoznika/{prevoznikID}")
-    public String komentariZaPrevoznika(Model m, @PathVariable("prevoznikID") int prevoznikID) {
+    public String komentariZaPrevoznika(Model m, @PathVariable("prevoznikID") int prevoznikID, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+			return "redirect:/korisnik/initPocetna";
+		}
 		Prevoznik p = (Prevoznik) pjr.findById(prevoznikID).get();
 		m.addAttribute("p", p);
 		List<Komentar> komentariZaPrevoz = komentarJPARepo.vratiKomentareZaPrevoznika(prevoznikID);
@@ -186,18 +201,26 @@ public class KorisnikController {
 	@RequestMapping(value="saveKomentarZaPrevoznika/{prevoznikID}", method=RequestMethod.POST)
 	public String saveKomentarZaPrevoznika(Model m, @PathVariable("prevoznikID") int prevoznikID, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
+			Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+			if(user==null) {
+				return "redirect:/korisnik/loginPage";
+			}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+				redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+				return "komentariZaPrevoznika";
+			}
 			Komentar k = new Komentar();
 			k.setKomentar(request.getParameter("komentar"));
 			Prevoznik p = pjr.findById(prevoznikID).get();
 			p.addKomentar(k);
-			k.setKorisnik((Korisnik) request.getSession().getAttribute("user"));
+			k.setKorisnik(user);
 			pjr.saveAndFlush(p);
 			komentarJPARepo.save(k);
 			List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(prevoznikID);
 			//m.addAttribute("komentari", komentari);
 			redirectAttributes.addFlashAttribute("komentari", komentari);
 			redirectAttributes.addFlashAttribute("message", "Komentar je uspesno dodat.");
-		} catch (Exception e) {
+			
+			} catch (Exception e) {
 			e.printStackTrace();
 			
 		}
@@ -205,7 +228,14 @@ public class KorisnikController {
 	}
 	
 	@RequestMapping(value = "initRezervacija", method = RequestMethod.GET)
-	public String initRezervacija(Model m) {
+	public String initRezervacija(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da rezervisete");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Destinacija> destinacije = destinacijaJpaRepo.findAll();
 		List<Vrstakarte> vrsteKarata = vrstaKarteJpaRepo.findAll();
 		
@@ -216,6 +246,13 @@ public class KorisnikController {
 	
 	@RequestMapping(value = "prikazPolazaka", method = RequestMethod.GET)
 	public String rezervacija(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik k = (Korisnik) request.getSession().getAttribute("user");
+		if(k == null) {
+			return "redirect:/korisnik/loginPage";
+		}
+		if(!k.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			return "redirect:/korisnik/initPocetna";
+		}
 		int destPolazak = Integer.parseInt(request.getParameter("polazak"));
 		int destDolazak = Integer.parseInt(request.getParameter("dolazak"));
 		int vrstaKarte = Integer.parseInt(request.getParameter("vrstaKarte"));
@@ -249,7 +286,15 @@ public class KorisnikController {
 	}
 	
 	@RequestMapping(value="rezervisi", method=RequestMethod.GET)
-	public String potvrdaRezervacije(@RequestParam("polazakDest") int polazakDest, @RequestParam("dolazakDest") int dolazakDest, @RequestParam("vrstaKarte") int vrstaKarte, @RequestParam("ruta") int rutaID,@RequestParam("cena") double cena,  Model m, HttpServletRequest request) {
+	public String potvrdaRezervacije(@RequestParam("polazakDest") int polazakDest, @RequestParam("dolazakDest") int dolazakDest, @RequestParam("vrstaKarte") int vrstaKarte, @RequestParam("ruta") int rutaID,@RequestParam("cena") double cena,  Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da rezervisete");
+			return "redirect:/korisnik/initPocetna";
+		}
+		
 		Karta k= new Karta();
 		
 		Stanica sPolazna = stanicaJpaRepo.findByDestinacijaIDAndRutaID(rutaID, polazakDest);
@@ -270,11 +315,11 @@ public class KorisnikController {
 			}
 		}
 		
-		Korisnik korisnik = (Korisnik) request.getSession().getAttribute("user");
+		
 		k.setDatumRezervacije(new Date());
 		k.setVrstakarte(vrstaKarteJpaRepo.findByVrstaKarteID(vrstaKarte));
-		k.setKorisnik2(korisnik);
-		List<Karta> karteKorisnika = kartaJpaRepo.rezervacijeKorisnika(korisnik.getKorisnikID());
+		k.setKorisnik2(user);
+		List<Karta> karteKorisnika = kartaJpaRepo.rezervacijeKorisnika(user.getKorisnikID());
 		if((karteKorisnika.size()+1)%3==0 ) {
 			String msg = "Dobijate popust 10% za ovu rezervaciju!";
 			k.setKonacnaCena(cena*0.9);
@@ -290,7 +335,14 @@ public class KorisnikController {
 	}
 	
 	@RequestMapping(value="prevozniciZaKomentar", method=RequestMethod.GET)
-	public String getPrevoznici(Model m, HttpServletRequest request) {
+	public String getPrevoznici(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Prevoznik> prevozniciZaKomentar = pjr.findAll();
 		m.addAttribute("prevozniciZaKomentar", prevozniciZaKomentar);
 		return "komentari";
@@ -298,7 +350,14 @@ public class KorisnikController {
 	
 	//komentari za prevoznika iz dropdown
 	@RequestMapping(value="getKomentari", method=RequestMethod.GET)
-	public String getKomentari(HttpServletRequest request, Model m) {
+	public String getKomentari(HttpServletRequest request, Model m, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
 		m.addAttribute("komentari", komentari);
 		return "saveKomentar";
@@ -307,11 +366,18 @@ public class KorisnikController {
 	@RequestMapping(value="saveKomentar", method=RequestMethod.POST)
 	public String saveKomentar(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		try {
+			Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+			if(user==null) {
+				return "redirect:/korisnik/loginPage";
+			}else if(!user.getUlogakorisnka().getNazivUloge().equals("PUTNIK")) {
+				redirectAttributes.addFlashAttribute("autherr", "Niste putnik, ne mozete da komentarisete");
+				return "redirect:/korisnik/initPocetna";
+			}
 			Komentar k = new Komentar();
 			k.setKomentar(request.getParameter("komentar"));
 			Prevoznik p = pjr.findById(Integer.parseInt(request.getParameter("prevoznik"))).get();
 			p.addKomentar(k);
-			k.setKorisnik((Korisnik) request.getSession().getAttribute("user"));
+			k.setKorisnik(user);
 			pjr.saveAndFlush(p);
 			komentarJPARepo.save(k);
 			List<Komentar> komentari = komentarJPARepo.vratiKomentareZaPrevoznika(Integer.parseInt(request.getParameter("prevoznik")));
@@ -327,7 +393,12 @@ public class KorisnikController {
 	
 	
 	@RequestMapping(value="initPocetna", method=RequestMethod.GET)
-	public String initPocetna(Model m) {
+	public String initPocetna(Model m, HttpServletRequest request) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}
+		
 		List<Destinacija> destinacije = destinacijaJpaRepo.findAll();
 		List<Vrstakarte> vrsteKarata = vrstaKarteJpaRepo.findAll();
 		
@@ -339,7 +410,11 @@ public class KorisnikController {
 	
 	@RequestMapping(value="pocetna", method=RequestMethod.GET)
 	public String prikazPolazaka(Model m,HttpServletRequest request, RedirectAttributes redirectAttributes) {
-		initPocetna(m);
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}
+		initPocetna(m,request);
 		int destPolazak = Integer.parseInt(request.getParameter("polazak"));
 		int destDolazak = Integer.parseInt(request.getParameter("dolazak"));
 		int vrstaKarte = Integer.parseInt(request.getParameter("vrstaKarte"));
@@ -366,12 +441,27 @@ public class KorisnikController {
 	}
 	
 	@RequestMapping(value = "initProdajaKarata", method = RequestMethod.GET)
-	public String initProdajaKarata(Model m, HttpServletRequest request) {
+	public String initProdajaKarata(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("RADNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste radnik, ne mozete da prodajete karte");
+			return "redirect:/korisnik/initPocetna";
+		}
 		return "prodajaKarata";
 	}
 	
 	@RequestMapping(value = "pronadjiRezervaciju", method = RequestMethod.GET)
-	public String pronadjiRezervaciju(Model m, HttpServletRequest request,String ime, String prezime) {
+	public String pronadjiRezervaciju(Model m, HttpServletRequest request,String ime, String prezime, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("RADNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste radnik, ne mozete prodajete karte");
+			return "redirect:/korisnik/initPocetna";
+		}
+
 		Korisnik k = kjr.findByImeAndPrezime(ime, prezime);
 		if(k == null) {
 			m.addAttribute("msg", "Ne postoji korisnik sa zadatim imenom");
@@ -385,7 +475,15 @@ public class KorisnikController {
 	}
 	
 	@RequestMapping(value = "prodajKartu", method = RequestMethod.POST)
-	public String prodajKartu(Model m, HttpServletRequest request, int idKarte) {
+	public String prodajKartu(Model m, HttpServletRequest request, int idKarte, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("RADNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste radnik, ne mozete prodajete karte");
+			return "redirect:/korisnik/initPocetna";
+		}
+		
 		Karta k = kartaJpaRepo.findById(idKarte);
 		k.setDatumProdaje(new Date());
 		Korisnik radnik = (Korisnik) request.getSession().getAttribute("user");
@@ -398,7 +496,15 @@ public class KorisnikController {
 	
 	//trenutno modifikovano od rezervisi
 	@RequestMapping(value="kupiBezRezervacije", method=RequestMethod.GET)
-	public String kupovinaBezRezervacije(@RequestParam("polazakDest") int polazakDest, @RequestParam("dolazakDest") int dolazakDest, @RequestParam("vrstaKarte") int vrstaKarte, @RequestParam("ruta") int rutaID,@RequestParam("cena") double cena,  Model m, HttpServletRequest request) {
+	public String kupovinaBezRezervacije(@RequestParam("polazakDest") int polazakDest, @RequestParam("dolazakDest") int dolazakDest, @RequestParam("vrstaKarte") int vrstaKarte, @RequestParam("ruta") int rutaID,@RequestParam("cena") double cena,  Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("RADNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste radnik, ne mozete prodajete karte");
+			return "redirect:/korisnik/initPocetna";
+		}
+		
 		Karta k= new Karta();
 		
 		Stanica sPolazna = stanicaJpaRepo.findByDestinacijaIDAndRutaID(rutaID, polazakDest);

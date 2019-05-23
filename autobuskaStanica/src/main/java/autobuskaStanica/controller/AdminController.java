@@ -58,7 +58,14 @@ public class AdminController {
 	
 	
 	@RequestMapping(value="initUnosRute", method=RequestMethod.GET)
-	public String initUnosRute(Model m, HttpServletRequest request) {
+	public String initUnosRute(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("ADMIN")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste admin, ne mozete da unosite rute");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Tippolaska> tipoviRute = tipRuteJPARepo.findAll();
 		List<Prevoznik> prevoznici = prevoznikJPARepo.findAll();
 		m.addAttribute("tipoviRute", tipoviRute);
@@ -69,6 +76,13 @@ public class AdminController {
 	
 	@RequestMapping(value="unosRute", method=RequestMethod.POST)
 	public String unosRute(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("ADMIN")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste admin, ne mozete da unosite rute");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Destinacija> destinacije = destinacijaJPARepo.findAll();
 		Integer brojMesta = 0;
 		Integer brojStanica = 0;
@@ -91,6 +105,13 @@ public class AdminController {
 	
 	@RequestMapping(value="unosStanica", method=RequestMethod.POST)
 	public String unosStanica(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("ADMIN")) {
+			redirectAttributes.addFlashAttribute("autherr", "Niste admin, ne mozete da unosite rute");
+			return "redirect:/korisnik/initPocetna";
+		}
 		try {
 			Ruta r = new Ruta();
 			r.setBrMesta(Integer.parseInt(request.getParameter("brojMesta")));
@@ -169,10 +190,14 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="danasnjaZarada", method=RequestMethod.GET)
-	public String danasnjaZarada(Model m, HttpServletRequest request) {
-		Korisnik user = (Korisnik) request.getSession().getAttribute("user");
-		if (user == null) 
-			return "login";
+	public String danasnjaZarada(Model m, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		Korisnik user = (Korisnik)request.getSession().getAttribute("user");
+		if(user==null) {
+			return "redirect:/korisnik/loginPage";
+		}else if(!user.getUlogakorisnka().getNazivUloge().equals("RADNIK")) {
+			redirectAttributes.addFlashAttribute("autherr", "Ova stranica je za radike");
+			return "redirect:/korisnik/initPocetna";
+		}
 		List<Karta> prodateKarte = kartaJPARepo.prodajeRadnikaZaDanas(user.getKorisnikID());
 		m.addAttribute("brojKarata", prodateKarte.size());
 		double ukupnaZarada = prodateKarte.stream().mapToDouble(x -> x.getKonacnaCena()).sum();

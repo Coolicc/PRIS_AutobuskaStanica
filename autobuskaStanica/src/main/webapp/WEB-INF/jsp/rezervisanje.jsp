@@ -24,7 +24,7 @@
 
 </head>
 	<!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+    <%@ include file="parts/headerP.jsp" %>
 <body class="loader-active">
 	 <!--== SlideshowBg Area Start ==-->
     <div id="page-title-area" class="section-padding overlay">

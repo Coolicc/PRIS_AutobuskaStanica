@@ -19,7 +19,7 @@
     <%@ include file="parts/imports.jsp" %>
     
     <!-- header import -->
-    <%@ include file="parts/header.jsp" %>
+    <%@ include file="parts/headerP.jsp" %>
 </head>
 
 <body class="loader-active">
